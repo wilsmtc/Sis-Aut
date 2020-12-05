@@ -26,9 +26,10 @@
         <link rel="stylesheet" href="{{asset("assets/$theme/assets/css/ace-rtl.min.css")}}" />
         
         @yield("styles")
+        <link rel="stylesheet" href="{{asset("assets/css/toastr/toastr.min.css")}}"/>
 		<script src="{{asset("assets/$theme/assets/js/ace-extra.min.js")}}"></script>
     </head>
-    <body class="no-skin">       
+    <body class="skin-1">       
         <div id="navbar" class="navbar navbar-default          ace-save-state">
             <div class="navbar-container ace-save-state" id="navbar-container">
 				<div class="navbar-header pull-left">
@@ -64,8 +65,15 @@
 		<!-- ace scripts -->
 		<script src="{{asset("assets/$theme/assets/js/ace-elements.min.js")}}"></script>
         <script src="{{asset("assets/$theme/assets/js/ace.min.js")}}"></script> 
+
+        <script src="{{asset("assets/$theme/assets/js/jquery.validate.min.js")}}"></script>
+        <script src="{{asset("assets/$theme/assets/js/messages_es.min.js")}}"></script> 
+
+        @yield("scriptsPlugins")
+        <script src="{{asset("assets/js/sweetalert/sweetalert.min.js")}}" type="text/javascript"></script>
+        <script src="{{asset("assets/js/toastr/toastr.min.js")}}" type="text/javascript"></script>
+        <script src="{{asset("assets/js/funciones.js")}}"></script>
         @yield("scripts")  
-        </div>
-        
+        </div>     
     </body>
 </html>
