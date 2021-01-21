@@ -1,6 +1,6 @@
 @extends("theme.$theme.layout")
 @section('titulo')
-    Crear Usuario
+    Editar Usuario
 @endsection
 @section("scripts")
     <script src="{{asset("assets/pages/scripts/usuario/validar.js")}}" type="text/javascript"></script>
@@ -17,10 +17,10 @@
 @section('contenido')
 <div class="page-header">
     <h1>
-        Usuario
+        Usuarios
         <small>
             <i class="ace-icon fa fa-angle-double-right"></i>
-             Crear Usuario
+             editar Usuario
         </small>
         <div class="box-tools pull-right">
             <a href="{{route('usuario')}}" class="btn btn-block btn-info btn-sm">
@@ -32,13 +32,13 @@
 <div class="row">
     <div class="col-xs-12">
         @include('mensajes.error')
-        <form class="form-horizontal" action="{{route ('guardar_usuario')}}" id="form-general" class="form-horizontal" method="POST" enctype="multipart/form-data">
-            @csrf
+        <form class="form-horizontal" action="{{route('actualizar_usuario', ['id' => $usuario->id])}}" id="form-general" class="form-horizontal" method="POST" enctype="multipart/form-data">
+            @csrf @method("put")
             @include('admin.usuarios.form')
             <div class="box-footer">
                 <div class="col-lg-4"></div>
                 <div class="col-lg-6">
-                    @include('botones.crear')
+                    @include('botones.actualizar')
                 </div>
             </div>
         </form>

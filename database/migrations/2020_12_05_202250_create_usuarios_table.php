@@ -16,7 +16,7 @@ class CreateUsuariosTable extends Migration
             $table->string('nombre',50);
             $table->string('apellido',50);
             $table->string('email', 50)->unique();
-            $table->string('password', 30);
+            $table->string('password', 100);
             $table->string('foto',15)->nullable();
             $table->enum('estado',['1','0'])->default('1');
             $table->charset = 'utf8mb4';
