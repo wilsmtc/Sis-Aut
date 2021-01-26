@@ -8,6 +8,7 @@ php artisan db:seed --class=UsuarioAdministradorSeeder
 php artisan make:model Models/Admin/Usuario
 php artisan make:request ValidacionMenu
 php artisan make:middleware Permisoadd
+php artisan config:clear 
 dd(session()->all());
 @if(Auth::user()->roles[0]->añadir == 1)    @endif
 @php

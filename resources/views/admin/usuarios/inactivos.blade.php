@@ -15,6 +15,7 @@
 <div class="row">
     <div class="col-xs-12">
         @include('mensajes.correcto')
+        @include('mensajes.incorrecto')
         <div class="box-body">
             <table id="tabla-data" class="table  table-bordered table-hover">
                 <thead>
@@ -37,24 +38,29 @@
                             <td>{{$usuarios->rol->rol}}</td>
                             <td style="text-align: center;">
                                 <a href="{{route('ver_usuario', $usuarios)}}" class="ver-usuario btn btn-info btn-xs tooltipC" title="ver foto" id="ver-usuario">
+                                    @csrf
                                     <i class="fa fa-fw fa-camera-retro"></i>
                                 </a>
-                                <div class="hidden-sm hidden-xs btn-group">  
-                                    <form action="{{route('activar_usuario', ['id' => $usuarios->id])}}" class="d-inline form-estado" method="POST" id="form-estado">
-                                        @csrf @method("put")
-                                        <button type="submit" class="btn btn-success btn-xs eliminar tooltipsC" title="Activar usuario">
-                                            <i class="ace-icon glyphicon glyphicon-ok"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="hidden-sm hidden-xs btn-group">  
-                                    <form action="{{route('eliminar_usuario', ['id' => $usuarios->id])}}" class="d-inline form-eliminar" method="POST" id="form-eliminar">
-                                        @csrf @method("delete")
-                                        <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Eliminar usuario">
-                                            <i class="fa fa-fw fa-close"></i>
-                                        </button>
-                                    </form>
-                                </div>                                                           
+                                @if(Auth::user()->rol->editar == 1)
+                                    <div class="hidden-sm hidden-xs btn-group">  
+                                        <form action="{{route('activar_usuario', ['id' => $usuarios->id])}}" class="d-inline form-estado" method="POST" id="form-estado">
+                                            @csrf @method("put")
+                                            <button type="submit" class="btn btn-success btn-xs eliminar tooltipsC" title="Activar usuario">
+                                                <i class="ace-icon glyphicon glyphicon-ok"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
+                                @if(Auth::user()->rol->eliminar == 1)
+                                    <div class="hidden-sm hidden-xs btn-group">  
+                                        <form action="{{route('eliminar_usuario', ['id' => $usuarios->id])}}" class="d-inline form-eliminar" method="POST" id="form-eliminar">
+                                            @csrf @method("delete")
+                                            <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Eliminar usuario">
+                                                <i class="fa fa-fw fa-close"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif                                                           
                             </td>
                         </tr>
                     @endforeach

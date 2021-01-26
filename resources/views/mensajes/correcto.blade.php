@@ -1,6 +1,6 @@
 
 <script>
-$('.alert[data-auto-dismiss]').each(function (index, element) {
+$('.alert alert-block alert-success alert-dismissible').each(function (index, element) {
     const $element = $(element),
         timeout = $element.data('auto-dismiss') || 3000;
     setTimeout(function () {

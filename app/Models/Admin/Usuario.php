@@ -7,9 +7,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
+    protected $remember_token = false;
     Protected $table = "usuarios";
     protected $fillable = ['rol_id','usuario','nombre','apellido','email','password','foto','estado'];
 
@@ -38,5 +42,20 @@ class Usuario extends Model
             return false;
         }
         
+    }
+    public function setSession($rol)
+    {
+            Session::put(
+            [            
+                'usuario'=> $this->usuario,
+                'usuario_id' =>$this->id,
+                'nombre_usuario'=>$this->nombre,
+                'apellido_usuario'=>$this->apellido,
+                'email_usuario'=>$this->email,
+                'foto_usuario'=>$this->foto,
+                'rol_usuario'=>$this->rol->rol,
+                
+            ]
+            );
     }
 }

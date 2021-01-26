@@ -32,6 +32,7 @@
 <div class="row">
     <div class="col-xs-12">
         @include('mensajes.error')
+        @include('mensajes.incorrecto')
         <form class="form-horizontal" action="{{route ('guardar_usuario')}}" id="form-general" class="form-horizontal" method="POST" enctype="multipart/form-data">
             @csrf
             @include('admin.usuarios.form')

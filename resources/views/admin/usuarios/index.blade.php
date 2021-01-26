@@ -9,17 +9,20 @@
 @section('contenido')
 <div class="page-header">
     <h1>
-        Lista de Usuarios       
-        <div class="box-tools pull-right">
-            <a href="{{route('crear_usuario')}}" class="btn btn-block btn-success btn-sm">
-                <i class="fa fa-fw fa-plus-circle"></i> Crear Usuario
-            </a>
-        </div>
+        Lista de Usuarios 
+        @if(Auth::user()->rol->añadir == 1)      
+            <div class="box-tools pull-right">
+                <a href="{{route('crear_usuario')}}" class="btn btn-block btn-success btn-sm">
+                    <i class="fa fa-fw fa-plus-circle"></i> Crear Usuario
+                </a>
+            </div>
+        @endif
     </h1>
 </div>
 <div class="row">
     <div class="col-xs-12">
         @include('mensajes.correcto')
+        @include('mensajes.incorrecto')
         <div class="box-body">
             <table id="tabla-data" class="table  table-bordered table-hover">
                 <thead>
@@ -42,22 +45,26 @@
                             <td>{{$usuarios->rol->rol}}</td>
                             <td style="text-align: center;">
                                 <a href="{{route('ver_usuario', $usuarios)}}" class="ver-usuario btn btn-info btn-xs tooltipC" title="ver foto" id="ver-usuario">
+                                    @csrf
                                     <i class="fa fa-fw fa-camera-retro"></i>
                                 </a>
-                                <div class="hidden-sm hidden-xs btn-group">                                    
-                                    <button onclick="location.href='{{route('editar_usuario', ['id' => $usuarios->id])}}'" class="btn btn-xs btn-warning" title="editar usuario">
-                                        <i class="ace-icon fa fa-pencil bigger-120"></i>
-                                    </button>
-                                </div>
-                                    
-                                <div class="hidden-sm hidden-xs btn-group">  
-                                    <form action="{{route('inactivar_usuario', ['id' => $usuarios->id])}}" class="d-inline form-estado" method="POST" id="form-estado">
-                                        @csrf @method("put")
-                                        <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Inactivar usuario">
-                                            <i class="fa fa-fw fa-ban"></i>
+                                @if(Auth::user()->rol->editar == 1)
+                                    <div class="hidden-sm hidden-xs btn-group">                                    
+                                        <button onclick="location.href='{{route('editar_usuario', ['id' => $usuarios->id])}}'" class="btn btn-xs btn-warning" title="editar usuario">
+                                            <i class="ace-icon fa fa-pencil bigger-120"></i>
                                         </button>
-                                    </form>
-                                </div>                        
+                                    </div>
+                                @endif
+                                @if(Auth::user()->rol->eliminar == 1)    
+                                    <div class="hidden-sm hidden-xs btn-group">  
+                                        <form action="{{route('inactivar_usuario', ['id' => $usuarios->id])}}" class="d-inline form-estado" method="POST" id="form-estado">
+                                            @csrf @method("put")
+                                            <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Inactivar usuario">
+                                                <i class="fa fa-fw fa-ban"></i>
+                                            </button>
+                                        </form>
+                                    </div> 
+                                @endif                       
                             </td>
                         </tr>
                     @endforeach

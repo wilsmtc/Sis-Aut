@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class InicioController extends Controller
+class MenuController extends Controller
 {
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        return view('welcome');
+        //
     }
 
     /**
@@ -19,7 +24,7 @@ class InicioController extends Controller
      */
     public function create()
     {
-
+        //
     }
 
     /**

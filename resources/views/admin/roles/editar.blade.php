@@ -23,6 +23,7 @@
 <div class="row">
     <div class="col-xs-12">
         @include('mensajes.error')
+        @include('mensajes.incorrecto')
         <form class="form-horizontal" action="{{route('actualizar_rol', ['id' => $data->id])}}" id="form-general" class="form-horizontal" method="POST">
             @csrf @method("put")
             @include('admin.roles.form')
