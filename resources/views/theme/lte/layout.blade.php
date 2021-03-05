@@ -26,6 +26,7 @@
         <link rel="stylesheet" href="{{asset("assets/$theme/assets/css/ace-rtl.min.css")}}" />
         
         @yield("styles")
+        <link rel="stylesheet" href="{{asset("assets/css/custom.css")}}">
         <link rel="stylesheet" href="{{asset("assets/css/toastr/toastr.min.css")}}"/>
 		<script src="{{asset("assets/$theme/assets/js/ace-extra.min.js")}}"></script>
     </head>
@@ -73,6 +74,7 @@
         <script src="{{asset("assets/js/sweetalert/sweetalert.min.js")}}" type="text/javascript"></script>
         <script src="{{asset("assets/js/toastr/toastr.min.js")}}" type="text/javascript"></script>
         <script src="{{asset("assets/js/funciones.js")}}"></script>
+        <script src="{{asset("assets/js/scripts.js")}}"></script>
         @yield("scripts")  
         </div>     
     </body>

@@ -75,14 +75,14 @@
                             </td>
                             <td style="text-align: center;">
                                 <div class="hidden-sm hidden-xs btn-group">                                    
-                                    <button onclick="location.href='{{route('editar_rol', ['id' => $roles->id])}}'" class="btn btn-xs btn-warning {{$editar}}" title="Editar Rol">
+                                    <button onclick="location.href='{{route('editar_rol', ['id' => $roles->id])}}'" class="btn btn-xs btn-warning" title="Editar Rol">
                                         <i class="ace-icon fa fa-pencil bigger-120"></i>
                                     </button>
                                 </div>
                                 <div class="hidden-sm hidden-xs btn-group">  
                                     <form action="{{route('eliminar_rol', ['id' => $roles->id])}}" class="d-inline form-eliminar " method="POST" id="form-eliminar" title="Eliminar Rol">
                                         @csrf @method("delete")
-                                        <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC {{$eliminar}}" title="Eliminar este rol">
+                                        <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Eliminar este rol">
                                             <i class="fa fa-fw fa-close"></i>
                                         </button>
                                     </form>

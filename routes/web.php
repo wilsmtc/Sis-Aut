@@ -26,5 +26,15 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
     Route::get('usuario_inactivo', 'UsuarioController@index_inactivo') ->name('usuario_inactivo');
     Route::put('usuario/{id}/inactivar', 'UsuarioController@inactivar') ->name('inactivar_usuario')->middleware('permisoeditar');
     Route::put('usuario/{id}/activar', 'UsuarioController@activar') ->name('activar_usuario')->middleware('permisoeditar');
-
+    //rutas del menu
+    Route::get('menu', 'MenuController@index') ->name('menu');
+    Route::get('menu/crear', 'MenuController@create') ->name('crear_menu')->middleware('permisocrear');
+    Route::get('menu/{id}/editar', 'MenuController@edit') ->name('editar_menu')->middleware('permisoeditar');
+    Route::post('menu', 'MenuController@store') ->name('guardar_menu');
+    Route::put('menu/{id}', 'MenuController@update') ->name('actualizar_menu');
+    Route::get('menu/{id}/eliminar', 'MenuController@destroy') ->name('eliminar_menu')->middleware('permisoeliminar');
+    Route::post('menu/guardar-orden', 'MenuController@guardarOrden')->name('guardar-orden');
+    //rutas del menu-rol
+    Route::get('menu-rol', 'MenuRolController@index') ->name('menu_rol');
+    Route::post('menu-rol', 'MenuRolController@store') ->name('guardar_menu_rol');
 });

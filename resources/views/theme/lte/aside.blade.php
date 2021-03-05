@@ -1,3 +1,4 @@
+{{-- {{dd($menusComposer)}} --}}
 <div id="sidebar" class="sidebar                  responsive                    ace-save-state">
   <script type="text/javascript">
     try{ace.settings.loadState('sidebar')}catch(e){}
@@ -34,7 +35,13 @@
   </div><!-- /.sidebar-shortcuts -->
 
   <ul class="nav nav-list">
-    <li class="">
+    @foreach ($menusComposer as $key => $item)
+        @if ($item["menu_id"] != 0)<!-- solo va entrar cuando es hijo -->
+            @break
+        @endif
+        @include("theme.$theme.menu-item", ["item" => $item])<!-- me redirecciona a la vista menu.item -->
+    @endforeach
+    {{-- <li class="">
       <a href="#" class="dropdown-toggle">
         <i class="menu-icon fa fa-list"></i>
         <span class="menu-text"> Roles </span>
@@ -54,37 +61,7 @@
           <b class="arrow"></b>
         </li>
       </ul>
-    </li>
-    <li class="">
-      <a href="#" class="dropdown-toggle">
-        <i class="menu-icon fa fa-users icon-animated-vertical"></i>
-        <span class="menu-text"> Usuarios </span>
-
-        <b class="arrow fa fa-angle-down"></b>
-      </a>
-
-      <b class="arrow"></b>
-
-      <ul class="submenu">
-        <li class="">
-          <a href="{{route('usuario')}}">
-            <i class="menu-icon fa fa-user"></i>
-            Ver Usuarios Activos
-          </a>
-
-          <b class="arrow"></b>
-        </li>
-
-        <li class="">
-          <a href="{{route('usuario_inactivo')}}">
-            <i class="menu-icon fa fa-user"></i>
-            Ver Usuarios Inactivos
-          </a>
-
-          <b class="arrow"></b>
-        </li>
-      </ul>
-    </li>
+    </li> --}}
 
   </ul><!-- /.nav-list -->
 
