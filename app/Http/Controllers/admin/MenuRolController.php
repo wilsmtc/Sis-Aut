@@ -15,6 +15,7 @@ class MenuRolController extends Controller
         $rols = Rol::orderBy('id')->pluck('rol','id')->toArray(); //solo mostrara los atributos del pluck y lo convierte en un array
         $menus = Menu::getMenu(); //ls funcion getmenu nos da los menus(padres) y submenus(hijos)
         $menusRols=Menu::with('roles')->get()->pluck('roles', 'id')->toArray();
+        //dd($menusRols);
         return view('admin.menu-rol.index', compact('rols', 'menus', 'menusRols'));
     }
 

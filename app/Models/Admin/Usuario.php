@@ -54,7 +54,7 @@ class Usuario extends Authenticatable
                 'email_usuario'=>$this->email,
                 'foto_usuario'=>$this->foto,
                 'rol_usuario'=>$this->rol->rol,
-                
+                'rol_id'=>$this->rol->id,
             ]
             );
     }

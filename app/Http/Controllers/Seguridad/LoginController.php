@@ -11,8 +11,8 @@ class LoginController extends Controller
     use AuthenticatesUsers;
     protected $redirectTo = '/admin';
 
-    public $maxAttempts = 2;//numero de intentos
-    //public $decayMinutes = 1;//tiempo de espera 30
+    public $maxAttempts = 2;//numero de intentos para fallar
+    public $decayMinutes = 1;//tiempo de espera 30 para volver a ingresar al login
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
@@ -31,10 +31,12 @@ class LoginController extends Controller
         $rol = $user->rol()->get();
         if ($user->estado==1) {
             $user->setSession($rol->toArray());//llama a la funcion setsession
+            //dd($user);
         } else {
             $this->guard()->logout();
             $request->session()->invalidate();
             return redirect('seguridad/login')->withErrors(['error' => 'Este usuario no esta activo']);
         }
     }
+
 }

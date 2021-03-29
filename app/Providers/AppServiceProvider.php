@@ -18,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
 
         view()->composer('theme.lte.aside', function ($view) {
-            $menus=Menu::getMenu();
+            $menus=Menu::getMenu(true);
             $view->with('menusComposer',$menus);
         });
         

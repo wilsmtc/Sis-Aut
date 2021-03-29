@@ -28,16 +28,26 @@
         @yield("styles")
         <link rel="stylesheet" href="{{asset("assets/css/custom.css")}}">
         <link rel="stylesheet" href="{{asset("assets/css/toastr/toastr.min.css")}}"/>
+        <link rel="stylesheet" href="{{asset("assets/css/flatpickr.min.css")}}"/>
+        <link rel="stylesheet" href="{{asset("assets/css/jquery.dataTables.min.css")}}">
 		<script src="{{asset("assets/$theme/assets/js/ace-extra.min.js")}}"></script>
     </head>
-    <body class="skin-1">       
+    @php
+        $clinica=MyHelper::Datos_Clinica();
+        $tema=$clinica->color;
+    @endphp
+    <body class="{{$tema}}">       
         <div id="navbar" class="navbar navbar-default          ace-save-state">
             <div class="navbar-container ace-save-state" id="navbar-container">
 				<div class="navbar-header pull-left">
 					<a href="index.html" class="navbar-brand">
 						<small>
-							<i class="fa fa-leaf"></i>
-							Ace Admin
+                            @if ($clinica->logo==null)
+                                <i class="fa fa-book"></i>
+                            @else
+                                <img class="img-circle zoom" src="{{Storage::url("datos/fotos/clinica/$clinica->logo")}}" width="4%"/>
+                            @endif
+							{{ $clinica->nombre}}
 						</small>
 					</a>
                 </div>
@@ -75,6 +85,9 @@
         <script src="{{asset("assets/js/toastr/toastr.min.js")}}" type="text/javascript"></script>
         <script src="{{asset("assets/js/funciones.js")}}"></script>
         <script src="{{asset("assets/js/scripts.js")}}"></script>
+        <script src="{{asset("assets/js/flatpickr/flatpickr.js")}}" type="text/javascript"></script>
+        <script src="{{asset("assets/js/datatables/jquery.dataTables.min.js")}}" type="text/javascript"></script>
+
         @yield("scripts")  
         </div>     
     </body>

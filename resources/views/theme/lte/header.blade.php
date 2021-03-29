@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="{{asset("assets/css/zoom.css")}}">
+
 <div class="navbar-buttons navbar-header pull-right" role="navigation">
     <ul class="nav ace-nav">
         <li class="grey dropdown-modal">
@@ -235,7 +237,7 @@
                                 @if(session()->get('foto_usuario')==null)
                                     <img class="img-circle" src="{{asset("assets/$theme/assets/images/avatars/usuario.jpg")}}" width="35%"/>
                                 @else
-                                    <img class="img-circle" style="center" src="{{Storage::url("datos/fotos/usuario/$aux")}}" width="35%">                  
+                                    <img class="img-circle  zoom" style="center" src="{{Storage::url("datos/fotos/usuario/$aux")}}" width="35%">                  
                                 @endif
                             </a>
                             <a href="#">                               

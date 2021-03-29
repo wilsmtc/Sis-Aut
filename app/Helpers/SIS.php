@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\Admin\Clinica;
+
 if (!function_exists('getMenuActivo')) {
     function getMenuActivo($ruta)
     {
@@ -7,5 +10,11 @@ if (!function_exists('getMenuActivo')) {
         } else {
             return '';
         }
+    }
+}
+class MyHelper {
+    public static function Datos_Clinica(){
+        $clinica = Clinica::findOrfail(1);
+        return $clinica;
     }
 }

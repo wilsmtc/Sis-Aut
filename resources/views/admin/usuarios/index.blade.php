@@ -38,7 +38,7 @@
                 <tbody>
                     @foreach ($datos as $usuarios)
                         <tr>
-                            <td>{{$usuarios->estado}}</td>
+                            <td>{{$usuarios->usuario}}</td>
                             <td>{{$usuarios->nombre}}</td>
                             <td>{{$usuarios->apellido}}</td>
                             <td>{{$usuarios->email}}</td>
@@ -74,7 +74,7 @@
     </div>
 </div>
 
-<div class="modal modal-info fade in" id="modal-ver-usuario" tabindex="-1">
+<div class="modal modal-info fade in" id="modal-ver-personal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content" style="background: rgb(185, 185, 185)">
             <div class="modal-header " style="background: rgb(95, 95, 104)">

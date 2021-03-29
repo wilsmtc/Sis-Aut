@@ -23,6 +23,7 @@
             <option value="fa-plus" {{old("icono",$data->icono?? "")=="fa-plus" ? "selected":""}}>&#x2b; plus</option>
             <option value="fa-pencil" {{old("icono",$data->icono?? "")=="fa-pencil" ? "selected":""}}>&#x270f; pencil</option>
             <option value="fa-search" {{old("icono",$data->icono?? "")=="fa-search" ? "selected":""}}>&#xe003; search</option>
+            
             <option value="fa-user" {{old("icono",$data->icono?? "")=="fa-user" ? "selected":""}}>&#xe008; user</option>
             <option value="fa-ban" {{old("icono",$data->icono?? "")=="fa-ban" ? "selected":""}}>&#xe090; stop</option>
             <option value="fa-bell" {{old("icono",$data->icono?? "")=="fa-bell" ? "selected":""}}>&#xe123; campana</option>
