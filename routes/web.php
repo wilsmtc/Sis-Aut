@@ -25,7 +25,7 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
             Route::delete('usuario/{id}', 'UsuarioController@destroy')->name('eliminar_usuario')->middleware('permisoeliminar');
             Route::post('usuario/{usuario}', 'UsuarioController@ver')->name('ver_usuario');
             Route::get('usuario_inactivo', 'UsuarioController@index_inactivo') ->name('usuario_inactivo');
-            Route::put('usuario/{id}/inactivar', 'UsuarioController@inactivar') ->name('inactivar_usuario')->middleware('permisoeditar');
+            Route::put('usuario/{id}/inactivar', 'UsuarioController@inactivar') ->name('inactivar_usuario')->middleware('permisoeliminar');
             Route::put('usuario/{id}/activar', 'UsuarioController@activar') ->name('activar_usuario')->middleware('permisoeditar');
             //rutas del menu
             Route::get('menu', 'MenuController@index') ->name('menu');
@@ -49,7 +49,7 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
     Route::get('unidad/{id}/editar', 'UnidadController@edit') ->name('editar_unidad')->middleware('permisoeditar');
     Route::post('unidad', 'UnidadController@store') ->name('guardar_unidad');
     Route::put('unidad/{id}', 'UnidadController@update') ->name('actualizar_unidad');
-    Route::delete('unidad/{id}', 'UnidadController@destroy')->name('eliminar_unidad')->middleware('permisoeliminar');
+    Route::delete('unidad/{id}/eliminar', 'UnidadController@destroy')->name('eliminar_unidad')->middleware('permisoeliminar');
         //rutas de personal
     Route::get('personal', 'PersonalController@index') ->name('personal');
     Route::get('personal/crear', 'PersonalController@create') ->name('crear_personal')->middleware('permisocrear');
@@ -59,5 +59,37 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
     Route::delete('personal/{id}', 'PersonalController@destroy')->name('eliminar_personal')->middleware('permisoeliminar');
     Route::get('personal/{id}/curriculum', 'PersonalController@pdf')->name('ver_curriculum');
     Route::post('personal/{personal}', 'PersonalController@ver')->name('ver_personal');
+    Route::get('personal_inactivo', 'PersonalController@index_inactivo') ->name('personal_inactivo');
+    Route::put('personal/{id}/inactivar', 'PersonalController@inactivar') ->name('inactivar_personal')->middleware('permisoeliminar');
+    Route::put('personal/{id}/activar', 'PersonalController@activar') ->name('activar_personal')->middleware('permisoeditar');
 
+        // Rutas del paciente
+    Route::get('paciente', 'PacienteController@index') ->name('paciente');
+    Route::get('paciente/crear', 'PacienteController@create') ->name('crear_paciente')->middleware('permisocrear');
+    Route::get('paciente/{id}/editar', 'PacienteController@edit') ->name('editar_paciente')->middleware('permisoeditar');
+    Route::post('pacient', 'PacienteController@store') ->name('guardar_paciente');
+    Route::put('paciente/{id}', 'PacienteController@update') ->name('actualizar_paciente');
+    Route::delete('paciente/{id}', 'PacienteController@destroy')->name('eliminar_paciente')->middleware('permisoeliminar');
+    Route::get('paciente/{id}/ver', 'PacienteController@ver') ->name('ver_paciente');  
+    Route::post('paciente', 'PacienteController@ordenar') ->name('ordenar_paciente');
+    //rutas de cargo
+    Route::get('cargo', 'CargoController@index') ->name('cargo');
+    Route::get('cargo/crear', 'CargoController@create') ->name('crear_cargo')->middleware('permisocrear');
+    Route::get('cargo/{id}/editar', 'CargoController@edit') ->name('editar_cargo')->middleware('permisoeditar');
+    Route::post('cargo', 'CargoController@store') ->name('guardar_cargo');
+    Route::put('cargo/{id}', 'CargoController@update') ->name('actualizar_cargo');
+    Route::delete('unidad/{id}', 'CargoController@destroy')->name('eliminar_cargo')->middleware('permisoeliminar');
+    //rutas de servicio
+    Route::get('servicio', 'ServicioController@index') ->name('servicio');
+    Route::get('servicio/crear', 'ServicioController@create') ->name('crear_servicio')->middleware('permisocrear');
+    Route::get('servicio/{id}/editar', 'ServicioController@edit') ->name('editar_servicio')->middleware('permisoeditar');
+    Route::post('servicio', 'ServicioController@store') ->name('guardar_servicio');
+    Route::put('servicio/{id}', 'ServicioController@update') ->name('actualizar_servicio');
+    Route::delete('servicio/{id}', 'ServicioController@destroy')->name('eliminar_servicio')->middleware('permisoeliminar');
+        //Rutas de Ficha
+    Route::get('ficha', 'FichaController@index') ->name('ficha');
+    Route::get('ficha/{id}/crear', 'FichaController@create') ->name('crear_ficha')->middleware('permisocrear');
+    Route::post('ficha', 'FichaController@store') ->name('guardar_ficha');
+    Route::put('ficha/{id}', 'FichaController@update') ->name('actualizar_ficha');
+    Route::delete('ficha/{id}/eliminar', 'FichaController@destroy')->name('eliminar_ficha')->middleware('permisoeliminar');
 });

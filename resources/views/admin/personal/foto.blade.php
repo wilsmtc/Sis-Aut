@@ -60,6 +60,12 @@
                                 </div>                              
                             </div>
                             <div class="profile-info-row">
+                                <div class="profile-info-name"> Cargo </div>
+                                <div class="profile-info-value">
+                                    <span class="editable"><i>{{$personal->cargo->nombre}}</i></span>
+                                </div>                              
+                            </div>
+                            <div class="profile-info-row">
                                 <div class="profile-info-name"> Unidad </div>
                                 <div class="profile-info-value">
                                     <span class="editable"><i>{{$personal->unidad->nombre}}</i></span>

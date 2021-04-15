@@ -26,7 +26,7 @@
         if(!nombre.value) return;                      //Si el valor es nulo o undefined salimos
         var mayuscula = palabra.substring(0,1).toUpperCase(); // almacenamos la mayuscula
         if (palabra.length > 0) {                     //si la palabra tiene más de una letra almacenamos las minúsculas
-            var minuscula = palabra.substring(1).toLowerCase();
+            var minuscula = palabra.substring(1); 
         }
         nombre.value = mayuscula.concat(minuscula);    //escribimos la palabra con la primera letra mayuscula
     }

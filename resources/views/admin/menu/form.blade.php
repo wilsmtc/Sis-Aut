@@ -1,19 +1,19 @@
 <div class="form-group">
-    <label for="nombre" class="col-sm-3 control-label no-padding-right">Nombre del Menú</label>
+    <label for="nombre" class="col-sm-3 control-label no-padding-right requerido">Nombre del Menú</label>
     <div class="col-lg-5">
     <input type="text" name="nombre" id="nombre" class="form-control" value="{{old('nombre', $data->nombre ?? '')}}" required placeholder="Nombre de Menú" onkeyup="NombreMayus()"/>
     </div>
 </div>
 
 <div class="form-group">
-    <label for="url" class="col-sm-3 control-label no-padding-right">Url del Menú</label>
+    <label for="url" class="col-sm-3 control-label no-padding-right requerido">Url del Menú</label>
     <div class="col-lg-5">
     <input type="text" name="url" id="url" class="form-control" value="{{old('url', $data->url ?? '')}}" required placeholder="Ruta"/>
     </div>
 </div>
 
 <div class="form-group">
-    <label for="icono" class="col-lg-3 control-label requerido">Icono</label>
+    <label for="icono" class="col-lg-3 control-label">Icono</label>
     <div class="col-lg-5">
         <select name="icono" id="icono" class="form-control glyphicon">
             <option value="">Seleccione su Opción</option>
@@ -49,7 +49,7 @@
         if(!nombre.value) return;                      //Si el valor es nulo o undefined salimos  
         var mayuscula = palabra.substring(0,1).toUpperCase(); // almacenamos la mayuscula  
         if (palabra.length > 0) {                     //si la palabra tiene más de una letra almacenamos las minúsculas
-            var minuscula = palabra.substring(1).toLowerCase();
+            var minuscula = palabra.substring(1);
         }                                              
         nombre.value = mayuscula.concat(minuscula);    //escribimos la palabra con la primera letra mayuscula
     }

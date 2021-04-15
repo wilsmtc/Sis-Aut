@@ -35,6 +35,11 @@
   </div><!-- /.sidebar-shortcuts -->
 
   <ul class="nav nav-list">
+    <li style="text-align: center">  
+      <a href="{{route('inicio')}}">   
+        <span class="menu-text blue"> MENU PRINCIPAL</span>
+      </a>
+    </li>
     @foreach ($menusComposer as $key => $item)
         @if ($item["menu_id"] != 0)<!-- solo va entrar cuando es hijo -->
             @break
@@ -64,7 +69,6 @@
     </li> --}}
 
   </ul><!-- /.nav-list -->
-
   <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
     <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
   </div>

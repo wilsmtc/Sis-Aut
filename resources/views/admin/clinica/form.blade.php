@@ -65,10 +65,10 @@
     <label for="icono" class="col-lg-3 control-label requerido">Tema</label>
     <div class="col-lg-2">
         <select name="color" id="color" class="form-control">      
-            <option style="background: rgb(10, 10, 10)" value="skin-1" {{old("color",$clinica->color?? "")=="skin-1" ? "selected":""}}>oscuro</option>
+            <option style="background: rgb(10, 10, 10)" value="skin-1" {{old("color",$clinica->color?? "")=="skin-1" ? "selected":""}}>Oscuro</option>
             <option style="background: rgb(129, 9, 79)" value="skin-2" {{old("color",$clinica->color?? "")=="skin-2" ? "selected":""}}>Morado</option>
-            <option style="background: rgb(213, 221, 223)" value="skin-3" {{old("color",$clinica->icono?? "")=="skin-3" ? "selected":""}}>Claro</option>
-            <option style="background: rgb(86, 131, 226)" value="no-skin" {{old("color",$clinica->icono?? "")=="-noskin" ? "selected":""}}>Azul</option>
+            <option style="background: rgb(213, 221, 223)" value="skin-3" {{old("color",$clinica->color?? "")=="skin-3" ? "selected":""}}>Claro</option>
+            <option style="background: rgb(86, 131, 226)" value="no-skin" {{old("color",$clinica->color?? "")=="no-skin" ? "selected":""}}>Azul</option>
         </select>
     </div>
 </div>  

@@ -36,6 +36,19 @@
 	</div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right requerido" for="form-field-1">Cargo</label>
+    <div class="col-lg-6">
+        <select name="cargo_id" id="cargo_id" class="form-control" required >
+            <option value="">Seleccione su Cargo</option>
+            @foreach($cargo as $id => $nombre)
+                <option
+                value="{{$id}}"{{old("cargo_id",$personal->cargo->id ?? "")==$id ? "selected":""}}>{{$nombre}}
+                </option>
+            @endforeach
+        </select>
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label no-padding-right requerido" for="form-field-1">Unidad a la que Pertenece</label>
     <div class="col-lg-6">
         <select name="unidad_id" id="unidad_id" class="form-control" required >

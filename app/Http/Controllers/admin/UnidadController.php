@@ -42,7 +42,7 @@ class UnidadController extends Controller
     public function update(ValidacionUnidad $request, $id)
     {
         Unidad::findOrFail($id)->update($request->all());
-        return redirect('admin/unidad')->with('mensaje', 'Rol actualizado con exito');
+        return redirect('admin/unidad')->with('mensaje', 'Unidad actualizada con exito');
     }
 
     public function destroy(Request $request, $id)

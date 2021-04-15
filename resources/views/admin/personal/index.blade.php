@@ -3,9 +3,9 @@
     Personal
 @endsection
 @section("scripts")
-    <script src="{{asset("assets/pages/scripts/alert/alert.js")}}" type="text/javascript"></script>
     <script src="{{asset("assets/pages/scripts/datatables/datatables.js")}}" type="text/javascript"></script>
     <script src="{{asset("assets/pages/scripts/personal/modal.js")}}" type="text/javascript"></script>
+    <script src="{{asset("assets/pages/scripts/personal/estado.js")}}" type="text/javascript"></script>
 @endsection
 @section('contenido')
 <div class="page-header">
@@ -28,10 +28,11 @@
             <table id="tabla-data" class="table  table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th style="text-align: center; width: 22%">Nombre</th>
-                        <th style="text-align: center; width: 22%">Apellido</th>
-                        <th style="text-align: center; width: 28%">Unidad</th>
-                        <th style="text-align: center; width: 15%">Curriculum</th>
+                        <th style="text-align: center; width: 17%">Nombres</th>
+                        <th style="text-align: center; width: 20%">Apellidos</th>
+                        <th style="text-align: center; width: 17%">Unidad</th>
+                        <th style="text-align: center; width: 20%">Cargo</th>
+                        <th style="text-align: center; width: 13%">Curriculum</th>
                         <th style="text-align: center; width: 13%">Opción</th>                           
                     </tr>
                 </thead>
@@ -41,6 +42,7 @@
                             <td style="text-align: center;">{{$personal->nombre}}</td>
                             <td style="text-align: center;">{{$personal->apellido}}</td>
                             <td style="text-align: center;">{{$personal->unidad->nombre}}</td>
+                            <td style="text-align: center;">{{$personal->cargo->nombre}}</td>
                             <td style="text-align: center;">
                                 @if($personal->curriculum==null)
                                     <span class="label label-inverse arrowed-in arrowed-in-right">No Tiene</span>
@@ -65,14 +67,14 @@
                                 @endif
                                 @if(Auth::user()->rol->eliminar == 1)    
                                     <div class="hidden-sm hidden-xs btn-group">  
-                                        <form action="{{route('eliminar_personal', ['id' => $personal->id])}}" class="d-inline form-eliminar " method="POST" id="form-eliminar">
-                                            @csrf @method("delete")
-                                            <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Eliminar Personal">
-                                                <i class="fa fa-fw fa-close"></i>
+                                        <form action="{{route('inactivar_personal', ['id' => $personal->id])}}" class="d-inline form-estado" method="POST" id="form-estado">
+                                            @csrf @method("put")
+                                            <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="dar de baja personal">
+                                                <i class="fa fa-fw fa-ban"></i>
                                             </button>
                                         </form>
                                     </div> 
-                                @endif                       
+                                @endif
                             </td>
                         </tr>
                     @endforeach

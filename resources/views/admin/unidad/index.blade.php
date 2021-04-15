@@ -48,15 +48,15 @@
                                     </div>
                                 @endif
                                 @if(Auth::user()->rol->eliminar == 1)    
-                                    <div class="hidden-sm hidden-xs btn-group">  
-                                        <form action="{{route('eliminar_unidad', ['id' => $unidad->id])}}" class="d-inline form-eliminar " method="POST" id="form-eliminar" title="Eliminar Unidad">
-                                            @csrf @method("delete")
-                                            <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Eliminar Unidad">
-                                                <i class="fa fa-fw fa-close"></i>
-                                            </button>
-                                        </form>
-                                    </div> 
-                                @endif                       
+                                <div class="hidden-sm hidden-xs btn-group">  
+                                    <form action="{{route('eliminar_unidad', ['id' => $unidad->id])}}" class="d-inline form-eliminar " method="POST" id="form-eliminar" title="Eliminar Servicios">
+                                        @csrf @method("delete")
+                                        <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Eliminar Unidad">
+                                            <i class="fa fa-fw fa-close"></i>
+                                        </button>
+                                    </form>
+                                </div> 
+                            @endif 
                             </td>
                         </tr>
                     @endforeach

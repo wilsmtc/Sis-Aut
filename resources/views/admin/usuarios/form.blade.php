@@ -1,23 +1,23 @@
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Usuario </label>
+    <label class="col-sm-3 control-label no-padding-right requerido" for="form-field-1" > Usuario </label>
     <div class="col-sm-6">
         <input type="text" class="form-control" minlength="3" maxlength="30" placeholder="Ingrese Usuario"  id="usuario" name="usuario" value="{{old('usuario', $usuario->usuario ?? '')}}" required />
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Nombre </label>
+    <label class="col-sm-3 control-label no-padding-right requerido" for="form-field-1"> Nombre </label>
     <div class="col-sm-6">
-        <input type="text" class="form-control" minlength="4" maxlength="50" placeholder="Ingrese Nombre"  id="nombre" name="nombre" value="{{old('nombre', $usuario->nombre ?? '')}}" required onkeyup="NombreMayus()"/>
+        <input type="text" class="form-control" minlength="2" maxlength="50" placeholder="Ingrese Nombre"  id="nombre" name="nombre" value="{{old('nombre', $usuario->nombre ?? '')}}" required onkeyup="NombreMayus()"/>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Apellido </label>
+    <label class="col-sm-3 control-label no-padding-right requerido" for="form-field-1"> Apellido </label>
     <div class="col-sm-6">
-        <input type="text" class="form-control" minlength="4" maxlength="50" placeholder="Ingrese Apellido"  id="apellido" name="apellido" value="{{old('apellido', $usuario->apellido ?? '')}}" required onkeyup="ApellidoMayus()"/>
+        <input type="text" class="form-control" minlength="2" maxlength="50" placeholder="Ingrese Apellido"  id="apellido" name="apellido" value="{{old('apellido', $usuario->apellido ?? '')}}" required onkeyup="ApellidoMayus()"/>
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Correo Electronico </label>
+    <label class="col-sm-3 control-label no-padding-right requerido" for="form-field-1"> Correo Electronico </label>
     <div class="col-sm-6">
         <input type="email" class="form-control" minlength="10" maxlength="50" placeholder="Ejm:juan@gmail.com"  id="email" name="email" value="{{old('email', $usuario->email ?? '')}}" required />
     </div>
@@ -36,13 +36,13 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="password">Contraseña</label>
+    <label class="col-sm-3 control-label no-padding-right requerido" for="password">Contraseña</label>
     <div class="col-sm-6">
         <input type="password" class="form-control" minlength="5" maxlength="30" placeholder="****" {{!isset($usuario) ? 'required' : ''}} id="password" name="password" autocomplete="on" />
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="re_password">Repita Contraseña</label>
+    <label class="col-sm-3 control-label no-padding-right requerido" for="re_password">Repita Contraseña</label>
     <div class="col-sm-6">
         <input type="password" class="form-control" placeholder="****" {{!isset($usuario) ? 'required' : ''}} id="re_password" name="re_password" autocomplete="on" />
     </div>
