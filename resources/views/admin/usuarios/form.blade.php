@@ -22,19 +22,21 @@
         <input type="email" class="form-control" minlength="10" maxlength="50" placeholder="Ejm:juan@gmail.com"  id="email" name="email" value="{{old('email', $usuario->email ?? '')}}" required />
     </div>
 </div>
+
 <div class="form-group">
     <label for="rol_id" class="col-lg-3 control-label requerido">Rol</label>
     <div class="col-lg-6">
         <select name="rol_id" id="rol_id" class="form-control" required>
             <option value="">Seleccione el Rol</option>
-            @foreach($rols as $id => $rol)
+            @foreach($roles as $id => $rol)
                 <option
-                value="{{$id}}"{{old("rol_id",$usuario->rol->id ?? "")==$id ? "selected":""}}>{{$rol}}</option>
+                value="{{$id}}"{{old("rol_id",$usuario->rol->id ?? "")==$id ? "selected":""}}>{{$rol}}
                 </option>
             @endforeach
         </select>
     </div>
-</div>
+</div> 
+
 <div class="form-group">
     <label class="col-sm-3 control-label no-padding-right requerido" for="password">Contraseña</label>
     <div class="col-sm-6">
@@ -62,7 +64,7 @@
         if(!nombre.value) return;                      //Si el valor es nulo o undefined salimos
         var mayuscula = palabra.substring(0,1).toUpperCase(); // almacenamos la mayuscula
         if (palabra.length > 0) {                     //si la palabra tiene más de una letra almacenamos las minúsculas
-            var minuscula = palabra.substring(1).toLowerCase();
+            var minuscula = palabra.substring(1);
         }
         nombre.value = mayuscula.concat(minuscula);    //escribimos la palabra con la primera letra mayuscula
     }
@@ -74,7 +76,7 @@
         if(!apellido.value) return;                      //Si el valor es nulo o undefined salimos
         var mayuscula = palabra.substring(0,1).toUpperCase(); // almacenamos la mayuscula
         if (palabra.length > 0) {                     //si la palabra tiene más de una letra almacenamos las minúsculas
-            var minuscula = palabra.substring(1).toLowerCase();
+            var minuscula = palabra.substring(1);
         }
         apellido.value = mayuscula.concat(minuscula);    //escribimos la palabra con la primera letra mayuscula
     }

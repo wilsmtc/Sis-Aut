@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\Admin\Clinica;
+use App\Models\Admin\Consulta;
 use App\Models\Admin\Paciente;
 use App\Models\Admin\Servicio;
+use App\Models\Admin\Usuario;
 
 if (!function_exists('getMenuActivo')) {
     function getMenuActivo($ruta)
@@ -51,12 +53,21 @@ class MyHelper {
                 if($diferencia->m==0)
                     $edad=$diferencia->d.$edad["d"];
                 else
-                    $edad=$diferencia->m.$edad["m"]." y ".$diferencia->d.$edad["d"]; 
+                    if($diferencia->d==0)
+                        $edad=$diferencia->m.$edad["m"];
+                    else
+                        $edad=$diferencia->m.$edad["m"]." y ".$diferencia->d.$edad["d"]; 
             else
                 if($diferencia->m==0)
-                    $edad=$diferencia->y .$edad["y"]." y ".$diferencia->d.$edad["d"];  
+                    if($diferencia->d==0)
+                        $edad=$diferencia->y.$edad["y"];
+                    else
+                        $edad=$diferencia->y .$edad["y"]." y ".$diferencia->d.$edad["d"];  
                 else
-                    $edad=$diferencia->y .$edad["y"].$diferencia->m.$edad["m"]." y ".$diferencia->d.$edad["d"];      
+                    if($diferencia->d==0)
+                        $edad=$diferencia->y .$edad["y"].$diferencia->m.$edad["m"];
+                    else
+                        $edad=$diferencia->y .$edad["y"].$diferencia->m.$edad["m"]." y ".$diferencia->d.$edad["d"];      
             return $edad; 
         }       
     }
@@ -68,5 +79,10 @@ class MyHelper {
     public static function Datos_Servicio($id){
         $servicio = Servicio::findOrfail($id);
         return $servicio;
+    }
+
+    public static function Usuarios_Pendientes(){
+        $usuarios = Usuario::where('estado',2)->get();
+        return $usuarios;
     }
 }

@@ -34,6 +34,9 @@
         @include('mensajes.incorrecto')
         <form class="form-horizontal" action="{{route ('guardar_personal')}}" id="form-general" class="form-horizontal" method="POST" enctype="multipart/form-data">
             @csrf
+            @php
+                $personal=null;
+            @endphp
             @include('admin.personal.form')
             <div class="box-footer">
                 <div class="col-lg-4"></div>

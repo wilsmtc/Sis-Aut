@@ -78,7 +78,7 @@
         @if($datos)
         <span class="blue center"><h3>Resultados </h3></span>
             <div class="box-body">
-                <table id="tabla-data" class="table  table-bordered table-hover">
+                <table id="tabla" class="table  table-bordered table-hover">
                     <thead>
                         <tr>
                             <th style="text-align: center; width: 10%">Expediente</th>
@@ -91,7 +91,7 @@
                         <tbody>
                             @foreach ($datos as $paciente)
                                 <tr>
-                                    <td style="text-align: center;">{{12345}}</td>
+                                    <td style="text-align: center;">00{{$paciente->id}}</td>
                                     <td style="text-align: center;">{{$paciente->nombre}} {{$paciente->apellido_p}} {{$paciente->apellido_m}}</td>
                                     <td style="text-align: center;">{{$paciente->ci}}</td>
                                     <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($paciente->fecha_nac,"index")}}</td>
@@ -177,15 +177,15 @@
                             </div>
                         </div>
                     </div>
-                <table id="tabla-data" class="table  table-bordered table-hover">
+                <table id="tabla" class="table  table-bordered table-hover">
                     <thead>
                         <tr>
                             <th style="text-align: center; width: 10%">Expediente</th>
-                            <th style="text-align: center; width: 40%">Nombres y Apellidos</th>
-                            <th style="text-align: center; width: 20%">Doctor</th>
+                            <th style="text-align: center; width: 38%">Nombres y Apellidos</th>
+                            <th style="text-align: center; width: 20%">Edad</th>
                             <th style="text-align: center; width: 10%">hora</th>  
                             <th style="text-align: center; width: 10%">Estado</th>
-                            <th style="text-align: center; width: 10%">Opción</th>
+                            <th style="text-align: center; width: 12%">Opción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -193,7 +193,7 @@
                             <tr>
                                 <td style="text-align: center;">{{$ficha->paciente->id}}</td>
                                 <td style="text-align: center;">{{$ficha->paciente->nombre}} {{$ficha->paciente->apellido_p}} {{$ficha->paciente->apellido_m}}</td>
-                                <td style="text-align: center;">doctor</td>
+                                <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($ficha->paciente->fecha_nac,"index")}}</td>
                                 <td style="text-align: center;">
                                     @php
                                         $aux =strtotime($ficha->hora);
@@ -253,9 +253,16 @@
                                                         <i class="fa fa-fw fa-close"></i>
                                                     </button>
                                                 </form>
-                                            </div> 
+                                            </div>                       
                                         @endif
                                     @endif
+                                    <div class="hidden-sm hidden-xs btn-group">  
+                                        <form action="{{route('imprimir_ficha', ['id' => $ficha->id])}}" class="d-inline" target="{{$ficha->id}}">
+                                            <button type="submit" class="btn btn-success btn-xs eliminar tooltipsC" title="Imprimir Ficha">
+                                                <i class="fa fa-fw fa-download"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

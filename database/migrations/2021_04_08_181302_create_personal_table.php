@@ -24,6 +24,7 @@ class CreatePersonalTable extends Migration
             $table->string('genero',6);
             $table->string('curriculum',30)->nullable();
             $table->enum('estado',['1','0'])->nullable()->default('1');
+            $table->string('sistema',2)->nullable();
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_spanish_ci';
             $table->timestamps();

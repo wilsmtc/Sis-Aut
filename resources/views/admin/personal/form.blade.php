@@ -1,13 +1,13 @@
 <div class="form-group">
     <label class="col-sm-3 control-label no-padding-right requerido" for="form-field-1"> Nombre </label>
     <div class="col-sm-6">
-        <input type="text" class="form-control" minlength="4" maxlength="50" placeholder="Ingrese Nombre"  id="nombre" name="nombre" value="{{old('nombre', $personal->nombre ?? '')}}" required onkeyup="NombreMayus()"/>
+        <input type="text" class="form-control" minlength="3" maxlength="50" placeholder="Ingrese Nombre"  id="nombre" name="nombre" value="{{old('nombre', $personal->nombre ?? '')}}" required onkeyup="NombreMayus()"/>
     </div>
 </div>
 <div class="form-group">
     <label class="col-sm-3 control-label no-padding-right requerido" for="form-field-1"> Apellido </label>
     <div class="col-sm-6">
-        <input type="text" class="form-control" minlength="3" maxlength="50" placeholder="Ingrese Apellido"  id="apellido" name="apellido" value="{{old('apellido', $personal->apellido ?? '')}}" required onkeyup="ApellidoMayus()"/>
+        <input type="text" class="form-control" minlength="2" maxlength="50" placeholder="Ingrese Apellido"  id="apellido" name="apellido" value="{{old('apellido', $personal->apellido ?? '')}}" required onkeyup="ApellidoMayus()"/>
     </div>
 </div>
 <div class="form-group">
@@ -73,6 +73,60 @@
 	</div>
 </div>
 
+<div class="form-group" style="width:100%; height: 40px;">
+    <label class="control-label col-xs-12 col-sm-3">¿Acceso al sistema?</label>
+    <div class="controls col-xs-12 col-sm-9">
+        <div class="col-xs-2">
+            <label>              
+                <input name="añadir" id="añadir" class="ace ace-switch ace-switch-6" type="checkbox" value="1" onchange="javascript:showContent()">
+                <span class="lbl"></span>
+            </label>
+        </div>
+    </div>
+</div>
+@if ($personal==null)
+    <div class="form-group" id="content" style="display: none;">
+        <label for="rol_id" class="col-lg-3 control-label requerido">Rol</label>
+        <div class="col-lg-6">
+            <select name="rol_id" id="rol_id" class="form-control">
+                <option value="">Seleccione el Rol</option>
+                @foreach($roles as $id => $rol)
+                    <option
+                    value="{{$id}}"{{old("rol_id",$usuario->rol->id ?? "")==$id ? "selected":""}}>{{$rol}}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>    
+@else
+    @if ($personal->sistema=='si')
+        <div class="form-group" id="content" style="display: none;">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <div class="alert alert-info">
+                    <strong>Atención! </strong> este personal ya cuenta con un Usuario
+                    <br />
+                </div>
+            </div>
+        </div>
+    @else
+        <div class="form-group" id="content" style="display: none;">
+            <label for="rol_id" class="col-lg-3 control-label requerido">Rol</label>
+            <div class="col-lg-6">
+                <select name="rol_id" id="rol_id" class="form-control">
+                    <option value="">Seleccione el Rol</option>
+                    @foreach($roles as $id => $rol)
+                        <option
+                        value="{{$id}}"{{old("rol_id",$usuario->rol->id ?? "")==$id ? "selected":""}}>{{$rol}}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>   
+    @endif   
+@endif
+
+
 <div class="col-lg-12">     
         <label class="col-lg-1 control-label no-padding-right">Foto</label>
         <div class="col-lg-4">       
@@ -96,8 +150,7 @@
         }
         nombre.value = mayuscula.concat(minuscula);    //escribimos la palabra con la primera letra mayuscula
     }
-</script>
-<script>
+
     var apellido = document.getElementById('apellido');  //instanciamos el elemento input
         function ApellidoMayus() {            //función que capitaliza la primera letra
         var palabra = apellido.value;                    //almacenamos el valor del input
@@ -108,4 +161,18 @@
         }
         apellido.value = mayuscula.concat(minuscula);    //escribimos la palabra con la primera letra mayuscula
     }
+
+    function showContent() {
+        element = document.getElementById("content");
+        check = document.getElementById("añadir");
+        if (check.checked) {
+            element.style.display='block';
+            $('#rol_id').prop('required', true);
+        }
+        else {
+            element.style.display='none';
+            $('#rol_id').prop('required', false);
+        }
+    }
+
 </script>

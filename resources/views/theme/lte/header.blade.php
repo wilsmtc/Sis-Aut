@@ -1,153 +1,64 @@
 <link rel="stylesheet" href="{{asset("assets/css/zoom.css")}}">
-
 <div class="navbar-buttons navbar-header pull-right" role="navigation">
     <ul class="nav ace-nav">
-        <li class="grey dropdown-modal">
-            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                <i class="ace-icon fa fa-tasks"></i>
-                <span class="badge badge-grey">4</span>
-            </a>
+        @php
+            $datos=MyHelper::Usuarios_Pendientes();
+            $contador=$datos->count();
+        @endphp
+        @if(session()->get('rol_id')==1 && $contador>=1)
+            <li class="grey dropdown-modal">
+                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                    <i class="ace-icon fa fa-bell icon-animated-bell"></i>
+                    <span class="badge badge-important"> {{$contador}}</span>
+                </a>
+                <ul class="dropdown-menu-right dropdown-navbar navbar-grey dropdown-menu dropdown-caret dropdown-close">
+                    <li class="dropdown-header">
+                        <i class="ace-icon fa fa-exclamation-triangle"></i>
+                        {{$contador}} Notificationes
+                    </li>
+                    <li class="dropdown-content">
+                        <ul class="dropdown-menu dropdown-navbar navbar-blue">
+                            <table id="table">
+                            @foreach ($datos as $usuario )                           
+                                <li>
+                                    <a class="clearfix">
+                                        <span class="msg-title">
+                                            <span class="blue">{{$usuario->nombre}} {{$usuario->apellido}}</span>
+                                            Solicita unirse al sistema con el rol de: <span class="blue">{{$usuario->rol->rol}} </span>
+                                        </span>
+                                        <form action="{{route('aceptar_usuario', ['id' => $usuario->id])}}" class="d-inline">
+                                            <button type="submit" class="btn btn-white btn-success btn-sm" style="border-width: 2px" onclick="return confirm('Desea ACEPTAR a: {{$usuario->nombre}} {{$usuario->apellido}}' )">
+                                                <i class="ace-icon fa fa-check bigger-120 success"></i>
+                                                Aceptar
+                                            </button>
+                                        </form> 
+                                        <form action="{{route('rechazar_usuario', ['id' => $usuario->id])}}" class="d-inline">  
+                                            <button type="submit" class="btn btn-white btn-danger btn-sm pull-right" style="border-width: 2px" onclick="return confirm('¿Esta seguro de RECHAZAR a: {{$usuario->nombre}} {{$usuario->apellido}}?')">
+                                                <i class="ace-icon fa fa-close bigger-120 danger"></i>
+                                                Rechazar
+                                            </button> 
+                                        </form> 
+                                    </a>
+                                </li>                           
+                            @endforeach
+                            </table>
+                        </ul>
+                    </li>
 
-            <ul class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
-                <li class="dropdown-header">
-                    <i class="ace-icon fa fa-check"></i>
-                    4 Tasks to complete
-                </li>
+                    <li class="dropdown-footer">
+                        <a href="#">
+                            See all notifications
+                            <i class="ace-icon fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+        
 
-                <li class="dropdown-content">
-                    <ul class="dropdown-menu dropdown-navbar">
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-                                    <span class="pull-left">Software Update</span>
-                                    <span class="pull-right">65%</span>
-                                </div>
+        
 
-                                <div class="progress progress-mini">
-                                    <div style="width:65%" class="progress-bar"></div>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-                                    <span class="pull-left">Hardware Upgrade</span>
-                                    <span class="pull-right">35%</span>
-                                </div>
-
-                                <div class="progress progress-mini">
-                                    <div style="width:35%" class="progress-bar progress-bar-danger"></div>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-                                    <span class="pull-left">Unit Testing</span>
-                                    <span class="pull-right">15%</span>
-                                </div>
-
-                                <div class="progress progress-mini">
-                                    <div style="width:15%" class="progress-bar progress-bar-warning"></div>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-                                    <span class="pull-left">Bug Fixes</span>
-                                    <span class="pull-right">90%</span>
-                                </div>
-
-                                <div class="progress progress-mini progress-striped active">
-                                    <div style="width:90%" class="progress-bar progress-bar-success"></div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="dropdown-footer">
-                    <a href="#">
-                        See tasks with details
-                        <i class="ace-icon fa fa-arrow-right"></i>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="purple dropdown-modal">
-            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                <i class="ace-icon fa fa-bell icon-animated-bell"></i>
-                <span class="badge badge-important">8</span>
-            </a>
-
-            <ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
-                <li class="dropdown-header">
-                    <i class="ace-icon fa fa-exclamation-triangle"></i>
-                    8 Notifications
-                </li>
-
-                <li class="dropdown-content">
-                    <ul class="dropdown-menu dropdown-navbar navbar-pink">
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-                                    <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-pink fa fa-comment"></i>
-                                        New Comments
-                                    </span>
-                                    <span class="pull-right badge badge-info">+12</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="btn btn-xs btn-primary fa fa-user"></i>
-                                Bob just signed up as an editor ...
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-                                    <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-success fa fa-shopping-cart"></i>
-                                        New Orders
-                                    </span>
-                                    <span class="pull-right badge badge-success">+8</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <div class="clearfix">
-                                    <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-info fa fa-twitter"></i>
-                                        Followers
-                                    </span>
-                                    <span class="pull-right badge badge-info">+11</span>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="dropdown-footer">
-                    <a href="#">
-                        See all notifications
-                        <i class="ace-icon fa fa-arrow-right"></i>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="green dropdown-modal">
+        {{-- <li class="green dropdown-modal">
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                 <i class="ace-icon fa fa-envelope icon-animated-vertical"></i>
                 <span class="badge badge-success">5</span>
@@ -204,7 +115,7 @@
                     </a>
                 </li>
             </ul>
-        </li>
+        </li> --}}
         <li class="blue dropdown-modal">
             <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                 @php
@@ -262,10 +173,14 @@
                     </ul>
                 </li>
                 <li class="dropdown-footer" >
-                    <a href="{{route('logout')}}" >
-                        <span class="label label-xlg label-danger arrowed arrowed-right">SALIR</span>
-                    </a>
-                </li>
+                    <button onclick="location.href='{{route('logout')}}'" class="btn btn-xs btn-danger pull-right" title="salir del sistema">
+                        <i class="ace-icon fa fa-close bigger-120"> Salir</i>
+                    </button> 
+                    <button onclick="location.href='{{route('editar_mi_usuario', ['id' => session()->get('usuario_id')])}}'" class="btn btn-xs btn-warning pull-left" title="editar usuario">
+                        <i class="ace-icon fa fa-pencil bigger-120"> Editar</i>
+                    </button>   
+                    <br>               
+                </li>                                                                              
             </ul>
         </li>
     </ul>

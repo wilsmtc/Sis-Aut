@@ -88,13 +88,13 @@
         @include('mensajes.correcto')
         @include('mensajes.incorrecto')
         <div class="box-body">
-            <table id="tabla-data" class="table  table-bordered table-hover">
+            <table id="tabla" class="table  table-bordered table-hover">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 8%">Exp.</th>
                         <th style="text-align: center; width: 25%">Paciente</th>
                         <th style="text-align: center; width: 20%">Especialidad</th>
-                        <th style="text-align: center; width: 20%">Doctor</th>
+                        <th style="text-align: center; width: 20%">Edad</th>
                         <th style="text-align: center; width: 9%">hora</th>  
                         <th style="text-align: center; width: 9%">Estado</th>
                         <th style="text-align: center; width: 9%">Opción</th>
@@ -106,7 +106,7 @@
                             <td style="text-align: center;">{{$ficha->paciente->id}}</td>
                             <td style="text-align: center;">{{$ficha->paciente->nombre}} {{$ficha->paciente->apellido_p}} {{$ficha->paciente->apellido_m}}</td>
                             <td style="text-align: center;">{{$ficha->servicio->nombre}}</td>
-                            <td style="text-align: center;">doctor</td>       
+                            <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($ficha->paciente->fecha_nac,"index")}}</td>       
                             <td style="text-align: center;">
                                 @php
                                     $aux =strtotime($ficha->hora);

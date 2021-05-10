@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ValidacionUsuario;
+use App\Models\Admin\Personal;
 use App\Models\Admin\Rol;
 use App\Models\Admin\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UsuarioController extends Controller
@@ -21,8 +23,8 @@ class UsuarioController extends Controller
 
     public function create()
     {
-        $rols = Rol::orderBy('id')->pluck('rol', 'id')->toArray();
-        return view('admin.usuarios.crear', compact('rols'));
+        $roles = Rol::orderBy('id')->pluck('rol', 'id')->toArray();
+        return view('admin.usuarios.crear', compact('roles'));
     }
 
     public function store(ValidacionUsuario $request)
@@ -40,18 +42,18 @@ class UsuarioController extends Controller
         //dd($usuario);
     }
 
-    public function edit($id)
+    public function edit($id) //en el index donde hay varios usuarios
     {
         $usuario = Usuario::findOrfail($id);
-        $rols = Rol::orderBy('id')->pluck('rol', 'id')->toArray();
-        return view('admin.usuarios.editar', compact('usuario','rols'));
+        $roles = Rol::orderBy('id')->pluck('rol', 'id')->toArray();
+        $mi_usuario=null;
+        return view('admin.usuarios.editar', compact('usuario','roles','mi_usuario'));        
     }
 
-    public function update(ValidacionUsuario $request, $id)
+    public function update(ValidacionUsuario $request, $id)  //actualizar el cualquier usuario 
     {
+        //dd($request->all());
         $usuario=Usuario::findOrFail($id);
-        if ($foto = Usuario::setFoto($request->foto_up, $usuario->foto))
-            $request->request->add(['foto' => $foto]);
         $usuario->update(array_filter($request->all()));
         return redirect('admin/usuario')->with('mensaje', 'Usuario actualizado con exito');
     }
@@ -114,4 +116,45 @@ class UsuarioController extends Controller
         return view('admin.usuarios.inactivos', compact('datos'));
         
     }
+
+    public function edit_user($id)
+    {
+        if($id==Auth::user()->id){
+            $usuario = Usuario::findOrfail($id);
+            $mi_usuario=1;
+            return view('admin.usuarios.editar', compact('usuario','mi_usuario'));    
+        }
+        else{
+            return back();
+        }     
+    }
+    public function update_user(ValidacionUsuario $request, $id)
+    {
+        $usuario=Usuario::findOrFail($id);
+        if ($foto = Usuario::setFoto($request->foto_up, $usuario->foto))
+            $request->request->add(['foto' => $foto]);
+        $usuario->update(array_filter($request->all()));
+        $rol = $usuario->rol()->get();
+        $usuario->setSession($rol);
+        return redirect('admin')->with('mensaje', 'Usuario actualizado con exito');    
+    }
+
+    public function aceptar($id)
+    {
+        $usuario=Usuario::findOrFail($id);
+        $usuario->update([
+            'estado'=>1        
+        ]);
+        return redirect('admin/usuario')->with('mensaje', 'Usuario agregado con exito');    
+
+    }
+    public function rechazar($id)
+    {
+        $usuario=Usuario::findOrFail($id);
+        Usuario::destroy($id);
+        $personal=Personal::findOrFail($usuario->personal_id);
+        $personal->update(['sistema'=>'no']);
+        return back()->with('mensajeerror', 'Usuario rechazado');
+    }
+
 }

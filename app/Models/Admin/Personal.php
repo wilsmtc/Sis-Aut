@@ -10,7 +10,7 @@ use Intervention\Image\Facades\Image;
 class Personal extends Model
 {
     protected $table = "personal";
-    protected $fillable=['nombre','apellido','ci','celular','fecha_ing','cargo_id','unidad_id','foto','genero','curriculum','estado','direccion'];
+    protected $fillable=['nombre','apellido','ci','celular','fecha_ing','cargo_id','unidad_id','foto','genero','curriculum','estado','direccion','sistema'];
 
     public function cargo()
     {

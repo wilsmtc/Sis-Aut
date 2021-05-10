@@ -123,7 +123,7 @@
                 </div>
             </div>
         </div>
-        <table id="tabla-data" class="table  table-bordered table-hover" >
+        <table id="tabla" class="table  table-bordered table-hover" >
             <tr class="bacground: blue">
                 <td class="col-lg-2 colo" style="text-align: center;"><u>Misión</u>:</td>
                 <td class="col-lg-2 colo" style="text-align: center;"><u>Visión</u>:</td>

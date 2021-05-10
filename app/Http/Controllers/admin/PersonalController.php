@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ValidacionPersonal;
 use App\Models\Admin\Cargo;
 use App\Models\Admin\Personal;
+use App\Models\Admin\Rol;
 use App\Models\Admin\Unidad;
+use App\Models\Admin\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PersonalController extends Controller
@@ -21,21 +24,46 @@ class PersonalController extends Controller
 
     public function create()
     {
+        $roles = Rol::orderBy('id')->pluck('rol', 'id')->toArray();
         $unidad = Unidad::orderBy('id')->pluck('nombre', 'id');
         $cargo = Cargo::orderBy('id')->pluck('nombre', 'id');
-        return view('admin.personal.crear', compact('unidad','cargo'));
+        return view('admin.personal.crear', compact('unidad','cargo','roles'));
     }
 
     public function store(ValidacionPersonal $request)
-    {
+    {  
         if($foto=Personal::setFoto($request->foto_up))
             $request->request->add(['foto'=>$foto]);
         if($documento=Personal::setDocumento($request->documento_up))
             $request->request->add(['curriculum'=>$documento]);
         //dd($request->all());
-        Personal::create($request->all());
-        //llamar a crear usuario, y llenarlo con datos
-        return redirect('admin/personal')->with('mensaje','Personal creado con exito');
+        if($request->rol_id==null){
+            $request->request->add(['sistema'=>'no']);
+            Personal::create($request->all()); 
+            return redirect('admin/personal')->with('mensaje','Personal creado con exito');
+        }
+        else{
+            $request->request->add(['sistema'=>'si']);
+            $personal=Personal::create($request->all()); 
+            //dd($personal->id);
+            if(Auth::user()->rol_id==1)
+                $aux=1;
+            else
+                $aux=2;
+            $usuario = Usuario::create([
+                'rol_id'=>$request->rol_id, 
+                'usuario'=>$request->ci,
+                'nombre'=>$request->nombre,
+                'apellido'=>$request->apellido,
+                'email'=>$request->ci.'@gmail.com',
+                'password'=>$request->ci,
+                'personal_id'=>$personal->id,
+                'estado'=>$aux        
+            ]);
+            
+            //dd($usuario->all());
+            return redirect('admin/personal')->with('mensaje','Personal y Usuario creado con exito');
+        }
     }
 
     public function show($id)
@@ -47,8 +75,9 @@ class PersonalController extends Controller
     {
         $unidad = Unidad::orderBy('id')->pluck('nombre', 'id')->toArray();
         $cargo = Cargo::orderBy('id')->pluck('nombre', 'id')->toArray();
-        $personal = Personal::with('unidad')->findOrFail($id);        
-        return view('admin.personal.editar', compact('personal','unidad','cargo'));
+        $roles = Rol::orderBy('id')->pluck('rol', 'id')->toArray();
+        $personal = Personal::findOrFail($id);        
+        return view('admin.personal.editar', compact('personal','unidad','cargo','roles'));
     }
 
     public function update(ValidacionPersonal $request, $id)
@@ -58,8 +87,31 @@ class PersonalController extends Controller
             $request->request->add(['foto' => $foto]);
         if ($documento = Personal::setDocumento($request->documento_up, $personal->curriculum))
             $request->request->add(['curriculum' => $documento]);
-        $personal->update($request->all());
-        return redirect('admin/personal')->with('mensaje', 'Datos actualizados con exito');
+        if($request->rol_id!=null){
+            $request->request->add(['sistema'=>'si']);
+            if(Auth::user()->rol_id==1)
+                $aux=1;
+            else
+                $aux=2;
+            $usuario = Usuario::create([
+                'rol_id'=>$request->rol_id, 
+                'usuario'=>$request->ci,
+                'nombre'=>$request->nombre,
+                'apellido'=>$request->apellido,
+                'email'=>$request->ci.'@gmail.com',
+                'password'=>$request->ci,
+                'personal_id'=>$id,
+                'estado'=>$aux        
+            ]);
+            //dd($usuario->all());
+            $personal->update($request->all());
+            return redirect('admin/personal')->with('mensaje', 'Datos actualizados y su Usuario ah sido creado');
+        }
+        else{
+            $personal->update($request->all());
+            return redirect('admin/personal')->with('mensaje', 'Datos actualizados con exito');
+        }   
+        
     }
 
     public function destroy(Request $request, $id)

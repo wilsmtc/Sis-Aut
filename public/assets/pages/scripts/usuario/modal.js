@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("#tabla-data").on('submit', '.form-eliminar', function (event) {
+    $(".table").on('submit', '.form-eliminar', function (event) {
         event.preventDefault();
         const form = $(this);
         swal({
@@ -35,9 +35,9 @@ $(document).ready(function () {
                 if (funcion == 'eliminarUsuario') {
                     if (respuesta.mensaje == "ok") {
                         form.parents('tr').remove();
-                        SIS.notificaciones('El registro fue eliminado correctamente', 'RRHH', 'success');
+                        SIS.notificaciones('El registro fue eliminado correctamente', 'Clinica Santa Teresa', 'success');
                     } else {
-                        SIS.notificaciones('El registro no pudo ser eliminado, hay recursos usandolo', 'RRHH', 'error');
+                        SIS.notificaciones('El registro no pudo ser eliminado, hay recursos usandolo', 'Clinica Santa Teresa', 'error');
                     }
                 } else if (funcion == 'verUsuario') {
                     $('#modal-ver-usuario .modal-body').html(respuesta)

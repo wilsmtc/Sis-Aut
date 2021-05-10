@@ -13,5 +13,6 @@
         </small>
     </h1>
 </div><!-- /.page-header -->
+@include('mensajes.correcto')
 @include('mensajes.incorrecto')
 @endsection

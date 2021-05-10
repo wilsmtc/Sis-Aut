@@ -87,24 +87,6 @@
                     </div>
                 </div>
             </div>
-            <div class="profile-info-row">
-                <div class="form-group">
-                    <label for="t_sangre" class="col-lg-3 control-label">Tipo de Sangre</label>
-                    <div class="col-lg-5">
-                        <select name="t_sangre" id="t_sangre" class="form-control">
-                            <option value="">Seleccione su Opción</option>
-                            <option value="O negativo" {{old("icono",$paciente->t_sangre?? "")=="O negativo" ? "selected":""}}>O negativo</option>
-                            <option value="O positivo" {{old("icono",$paciente->t_sangre?? "")=="O positivo" ? "selected":""}}>O positivo</option>
-                            <option value="A negativo" {{old("icono",$paciente->t_sangre?? "")=="A negativo" ? "selected":""}}>A negativo</option>
-                            <option value="A positivo" {{old("icono",$paciente->t_sangre?? "")=="A positivo" ? "selected":""}}>A positivo</option>
-                            <option value="B negativo" {{old("icono",$paciente->t_sangre?? "")=="B negativo" ? "selected":""}}>B negativo</option>
-                            <option value="B positivo" {{old("icono",$paciente->t_sangre?? "")=="B positivo" ? "selected":""}}>B positivo</option>
-                            <option value="AB negativo" {{old("icono",$paciente->t_sangre?? "")=="AB negativo" ? "selected":""}}>AB negativo</option>
-                            <option value="AB positivo" {{old("icono",$paciente->t_sangre?? "")=="AB positivo" ? "selected":""}}>AB positivo</option>
-                        </select>
-                    </div>
-                </div> 
-            </div>
         </div><br>
     </div>
 </div>

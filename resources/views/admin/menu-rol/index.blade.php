@@ -16,7 +16,7 @@ Menú - Rol
             </div>
             <div class="box-body">
                 @csrf
-                <table class="table table-striped table-bordered table-hover" id="tabla-data" >
+                <table class="table table-striped table-bordered table-hover" id="tabla" >
                     <thead>
                         <tr style="background: rgb(77, 127, 170)" class="white">
                             <th>Menús</th>

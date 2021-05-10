@@ -9,14 +9,15 @@ class UsuarioAdministradorSeeder extends Seeder
     public function run()
     {
         DB::table('clinica')->insert([
-            'nombre'=>'CLINICA SANTA TERESA',
-            'direccion'=>'Cll. Ayacucho N°39 entre Cochabamba y Santa Teresa',
-            'telefono'=>'262-26666',
-            'contacto_1'=>'76167618',
-            'propietario'=>'Dr. Benigno Gutierrez Vargas',
-            'mision'=>'Curar personas',
-            'vision'=>'ganar dinero',
-            'color'=>'skin-1'
+            'nombre'=>'CLÍNICA SANTA TERESA',
+            'direccion'=>'Calle Ayacucho Nro 39 entre Cochabamba y Santa Teresa ',
+            'telefono'=>'2-6224000',
+            'contacto_1'=>'76168781',
+            'propietario'=>'Benigno  Gutiérrez Vargas',
+            'mision'=>'Brindar atención médica de excelencia, a través de un equipo humano cálido y calificado, logrando la máxima satisfacción de los pacientes',
+            'vision'=>'Crecer hacia adelante, progresar e implementar más atenciones y atender a la mayor parte de la población. Así poder ser reconocidos como zona de influencia por la calidad asistencial, seguridad y satisfacción del paciente',
+            'descripcion'=>'La Clínica Santa Teresa de la cuidad de Potosí ya tiene 45 años de funcionalidad, está compuesto por un equipo de profesionales que brindan servicios de salud para ayudar a sus pacientes',
+            'color'=>'skin-1',
         ]);
 
         DB::table('roles')->insert([
@@ -26,7 +27,22 @@ class UsuarioAdministradorSeeder extends Seeder
             'eliminar'=>1
         ]);
         DB::table('roles')->insert([
-            'rol'=>'Usuario'
+            'rol'=>'Médico',
+            'añadir'=>1,
+            'editar'=>1,
+            'eliminar'=>0
+        ]);
+        DB::table('roles')->insert([
+            'rol'=>'Enfermería',
+            'añadir'=>1,
+            'editar'=>1,
+            'eliminar'=>0
+        ]);
+        DB::table('roles')->insert([
+            'rol'=>'Oficinista',
+            'añadir'=>1,
+            'editar'=>1,
+            'eliminar'=>0
         ]);
         DB::table('usuarios')->insert([
             'usuario'=>'cr7',
@@ -36,21 +52,85 @@ class UsuarioAdministradorSeeder extends Seeder
             'apellido'=>'Uño',
             'email'=>'wils.mtc.cmb@gmail.com'
         ]);
+
         DB::table('unidades')->insert([
             'nombre'=>'Gerencia',
-            'sigla'=>'GER',
-            'descripcion'=>'Cabeza de la institución'
+            'sigla'=>'GCIA',
+            'descripcion'=>'Encargados de dirijir la Clínica'
         ]);
+        DB::table('unidades')->insert([
+            'nombre'=>'Unidad Médica',
+            'sigla'=>'UM',
+        ]);
+        DB::table('unidades')->insert([
+            'nombre'=>'Unidad de Enfermería',
+            'sigla'=>'UENF',
+        ]);
+        DB::table('unidades')->insert([
+            'nombre'=>'Administración',
+            'sigla'=>'ADM',
+        ]);
+        DB::table('unidades')->insert([
+            'nombre'=>'Unidad de Apoyo',
+            'sigla'=>'APOYO',
+        ]);
+
         DB::table('cargo')->insert([
             'nombre'=>'Gerente',
-            'descripcion'=>'Cabeza de la institución'
+            'descripcion'=>'Máxima autoridad'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Jefe Médico',
+            'descripcion'=>'Supervisor de todos los médicos'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Médico de Planta',
+            'descripcion'=>'Médico geneal'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Jefe de enfermería',
+            'descripcion'=>'Supervisor de todos los enfermeros y enfemeras'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Enfermero/a de Planta',
+            'descripcion'=>'Los que estan a cargo de los pacientes'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Estudiantes de enfermería',
+            'descripcion'=>'Estudiantes de Enfermería y/o medicina'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Receocionista',
+            'descripcion'=>'Abre las historias clínicas de pacientes de atención ambulatoria, se toman los datos de pacientes'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Operador de Limpieza',
+            'descripcion'=>'Esta encargado de la limpieza e higiene del local su labor es continua'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Secretaria de Gerencia',
+            'descripcion'=>'La secretaria de gerencia realiza labor de apoyo al director médico y al gerente de la cliníca'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Camillero',
+            'descripcion'=>'Persona encargada de transportar enfermos o heridos en camilla'
+        ]);
+        DB::table('cargo')->insert([
+            'nombre'=>'Chofer',
         ]);
         
         DB::table('menu')->insert([
             'menu_id'=>0,
+            'nombre'=>'Administrador',
+            'url'=>'admin/',
+            'orden'=>1,
+            'icono'=>'fa-plus'
+        ]);
+        DB::table('menu')->insert([
+            'menu_id'=>0,
             'nombre'=>'Clínica',
             'url'=>'admin/clinica/#',
-            'orden'=>1,
+            'orden'=>2,
             'icono'=>'fa-plus'
         ]);
                 
@@ -58,16 +138,8 @@ class UsuarioAdministradorSeeder extends Seeder
             'menu_id'=>0,
             'nombre'=>'Menú',
             'url'=>'admin/menu/#',
-            'orden'=>2,
-            'icono'=>'fa-list'
-        ]);
-                
-        DB::table('menu')->insert([
-            'menu_id'=>0,
-            'nombre'=>'Rol',
-            'url'=>'admin/rol/#',
             'orden'=>3,
-            'icono'=>'fa-tag'
+            'icono'=>'fa-list'
         ]);
                 
         DB::table('menu')->insert([
@@ -111,35 +183,35 @@ class UsuarioAdministradorSeeder extends Seeder
         ]);      
                 //Hijos
                 DB::table('menu')->insert([
-                    'menu_id'=>1,
+                    'menu_id'=>2,
                     'nombre'=>'Ver Clínica',
                     'url'=>'admin/clinica',
                     'orden'=>1,
                     'icono'=>'fa-asterisk'
                 ]);
                 DB::table('menu')->insert([
-                    'menu_id'=>1,
+                    'menu_id'=>2,
                     'nombre'=>'Servicios',
                     'url'=>'admin/servicio',
                     'orden'=>2,
                     'icono'=>'fa-asterisk'
                 ]);
                 DB::table('menu')->insert([
-                    'menu_id'=>2,
+                    'menu_id'=>3,
                     'nombre'=>'Ver Menú',
                     'url'=>'admin/menu',
                     'orden'=>1,
                     'icono'=>'fa-th'
                 ]);
                 DB::table('menu')->insert([
-                    'menu_id'=>2,
+                    'menu_id'=>3,
                     'nombre'=>'Menú-Rol',
                     'url'=>'admin/menu-rol',
                     'orden'=>2,
                     'icono'=>'fa-list'
                 ]);
                 DB::table('menu')->insert([
-                    'menu_id'=>3,
+                    'menu_id'=>4,
                     'nombre'=>'Ver Rol',
                     'url'=>'admin/rol',
                     'orden'=>1,
@@ -147,16 +219,16 @@ class UsuarioAdministradorSeeder extends Seeder
                 ]);
                 DB::table('menu')->insert([
                     'menu_id'=>4,
-                    'nombre'=>'Ver Usuarios Activos',
+                    'nombre'=>'Ver Usuarios',
                     'url'=>'admin/usuario',
-                    'orden'=>1,
+                    'orden'=>2,
                     'icono'=>'fa-user'
                 ]);
                 DB::table('menu')->insert([
                     'menu_id'=>4,
-                    'nombre'=>'Ver Usuarios Inactivos',
+                    'nombre'=>'Ver Usuarios con Baja',
                     'url'=>'admin/usuario_inactivo',
-                    'orden'=>2,
+                    'orden'=>3,
                     'icono'=>'fa-user'
                 ]);
                 DB::table('menu')->insert([
@@ -175,7 +247,7 @@ class UsuarioAdministradorSeeder extends Seeder
                 ]);
                 DB::table('menu')->insert([
                     'menu_id'=>6,
-                    'nombre'=>'Ver Personal Activo',
+                    'nombre'=>'Ver Personal',
                     'url'=>'admin/personal',
                     'orden'=>2,
                     'icono'=>'fa-eye'
@@ -201,6 +273,20 @@ class UsuarioAdministradorSeeder extends Seeder
                     'orden'=>1,
                     'icono'=>'fa-book'
                 ]);
+                DB::table('menu')->insert([
+                    'menu_id'=>8,
+                    'nombre'=>'Consulta Externa',
+                    'url'=>'admin/ficha/consulta',
+                    'orden'=>2,
+                    'icono'=>'fa-book'
+                ]);
+                DB::table('menu')->insert([
+                    'menu_id'=>8,
+                    'nombre'=>'Enfermeria',
+                    'url'=>'admin/ficha/enfermeria',
+                    'orden'=>3,
+                    'icono'=>'fa-book'
+                ]);
               
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>1]);
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>2]);
@@ -223,6 +309,8 @@ class UsuarioAdministradorSeeder extends Seeder
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>19]);   
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>20]);
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>21]);
+        DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>22]);
+        DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>23]);
         $faker=Faker::create();
         for($i=0;$i<1000;$i++){
             DB::table('paciente')->insert([
@@ -234,7 +322,31 @@ class UsuarioAdministradorSeeder extends Seeder
                 'celular'=>$faker->unique()->numberBetween($min = 10000, $max = 999999),
                 'fecha_nac'=>$faker->dateTimeBetween($startDate = '-100 years', $endDate = 'now'),
                 'genero'=>$faker->randomElement(['Hombre', 'Mujer']),
-                't_sangre'=>$faker->randomElement(['O negativo', 'O positivo','A negativo','A positivo','B negativo','B positivo','AB negativo','AB positivo',null]),
+                //'t_sangre'=>$faker->randomElement(['O negativo', 'O positivo','A negativo','A positivo','B negativo','B positivo','AB negativo','AB positivo',null]),
+            ]);
+        }
+        DB::table('paciente')->insert([
+            'nombre'=>'Wilson',
+            'apellido_p'=>'Uño',
+            'apellido_m'=>'Ortiz',
+            'ci'=>'8553148',
+            'direccion'=>'Roncal #201',
+            'celular'=>$faker->unique()->numberBetween($min = 10000, $max = 999999),
+            'fecha_nac'=>'1900-01-01',
+            'genero'=>$faker->randomElement(['Hombre', 'Mujer']),
+            //'t_sangre'=>$faker->randomElement(['O negativo', 'O positivo','A negativo','A positivo','B negativo','B positivo','AB negativo','AB positivo',null]),
+        ]);
+        for($i=0;$i<500;$i++){
+            DB::table('personal')->insert([
+                'nombre'=>$faker->firstName,
+                'apellido'=>$faker->lastName,
+                'ci'=>$faker->unique()->numberBetween($min = 1000000, $max = 99999999),
+                'direccion'=>$faker->city,
+                'celular'=>$faker->unique()->numberBetween($min = 10000, $max = 999999),
+                'fecha_ing'=>$faker->dateTimeBetween($startDate = '-20 years', $endDate = 'now'),
+                'cargo_id'=>$faker->numberBetween($min = 1, $max = 11),
+                'unidad_id'=>$faker->numberBetween($min = 1, $max = 5),
+                'genero'=>$faker->randomElement(['Hombre', 'Mujer'])
             ]);
         }
 

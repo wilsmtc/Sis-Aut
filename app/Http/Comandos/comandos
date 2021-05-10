@@ -17,4 +17,8 @@ dd(session()->all());
 {{-- php code here --}}
 @endphp
 
+$table->string('t_sangre',12)->nullable();
+
+
+
 

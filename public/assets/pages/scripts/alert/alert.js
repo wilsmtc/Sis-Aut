@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("#tabla-data").on('submit', '.form-eliminar', function () {   //. es clase  #id
+    $(".table").on('submit', '.form-eliminar', function () {   //. es clase  #id
         event.preventDefault();
         const form = $(this);
         swal({
@@ -24,14 +24,9 @@ $(document).ready(function () {
             success: function (respuesta) {
                 if (respuesta.mensaje == "ok") {
                     form.parents('tr').remove();
-                    SIS.notificaciones('El registro fue eliminado correctamente', 'SIS', 'success');
+                    SIS.notificaciones('El registro fue eliminado correctamente', 'Clinica Santa Teresa', 'success');
                 } else {
-                    if (respuesta.mensaje == "ng") {
-                        SIS.notificaciones('El registro no pudo ser eliminado, hay recursos usandolo', 'SIS', 'error');
-                    }
-                    else{
-                        SIS.notificaciones('El Rol Administrador no puede ser eliminado', 'SIS', 'warning');
-                    }
+                    SIS.notificaciones('El registro no pudo ser eliminado, hay recursos usandolo', 'Clinica Santa Teresa', 'error');
                 }
             },
             error: function () {

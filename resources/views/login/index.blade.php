@@ -22,7 +22,7 @@
 										$clinica=MyHelper::Datos_Clinica();
 									@endphp
 									@if($clinica->logo==null)
-										<img class="nav-user-photo" style="border-radius: 800px" width="120" height="120" src="{{asset("assets/$theme/assets/images/gallery/bayern.png")}}" />
+										<img class="nav-user-photo" style="border-radius: 800px" width="120" height="120" src="{{asset("assets/$theme/assets/images/gallery/logo.jpg")}}" />
 									@else
 										<img class="nav-user-photo" style="border-radius: 800px" width="120" height="120" src="{{Storage::url("datos/fotos/clinica/$clinica->logo")}}" />
 									@endif

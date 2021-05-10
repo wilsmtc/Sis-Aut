@@ -19,7 +19,7 @@
         @include('mensajes.correcto')
         @include('mensajes.incorrecto')
         <div class="box-body">
-            <table id="tabla-data" class="table  table-bordered table-hover">
+            <table id="tabla" class="table  table-bordered table-hover">
                 <thead>
                     <tr>
                         <th style="text-align: center; width: 17%">Nombres</th>

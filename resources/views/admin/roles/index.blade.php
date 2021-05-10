@@ -38,7 +38,7 @@
         @include('mensajes.correcto')
         @include('mensajes.incorrecto')
         <div class="box-body">
-            <table id="tabla-data" class="table  table-bordered table-hover">
+            <table id="tabla" class="table  table-bordered table-hover">
                 <thead>
                     <tr>
                         <th class="col-lg-4" style="text-align: center;">Rol</th>

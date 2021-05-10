@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Clinica;
 use App\Models\Admin\Ficha;
 use App\Models\Admin\Paciente;
 use App\Models\Admin\Servicio;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
+
 
 class FichaController extends Controller
 {
@@ -66,7 +69,7 @@ class FichaController extends Controller
         //dd($request->all());
         Ficha::create($request->all());
 
-        return redirect("admin/ficha/$request->servicio_id/crear")->with('mensaje','Ficha creado con exito');
+        return redirect("admin/ficha/consulta")->with('mensaje','Ficha creado con exito');
     }
 
 
@@ -80,7 +83,7 @@ class FichaController extends Controller
     {
         //dd($request->all());
         Ficha::findOrFail($id)->update($request->all());
-        return redirect("admin/ficha/$request->servicio_id/crear")->with('mensaje','Ficha actualizada con exito');
+        return redirect("admin/ficha/consulta")->with('mensaje','Ficha actualizada con exito');
     }
 
 
@@ -102,5 +105,22 @@ class FichaController extends Controller
         } else {
              abort(404);
         }   
+    }
+
+    public function imprimir($id)
+    {
+        $ficha = Ficha::findOrFail($id);
+        $clinica = Clinica::findOrFail(1);
+        if($clinica->logo==null)
+            $image = base64_encode(file_get_contents(public_path("assets/lte/assets/images/gallery/bayern.png")));
+        else
+            $image = base64_encode(file_get_contents(public_path("storage/datos/fotos/clinica/$clinica->logo")));
+        $pdf=PDF::loadview('admin.ficha.imprimir_ficha', compact('ficha','clinica','image'));
+        return $pdf->stream('ficha.pdf');
+    }
+
+    public function calendario()
+    {
+        return view('admin.ficha.calendario');
     }
 }

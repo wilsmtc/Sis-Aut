@@ -77,7 +77,7 @@
 
 
         <div class="box-body">
-            <table id="tabla-data" class="table  table-bordered table-hover">
+            <table id="tabla" class="table  table-bordered table-hover">
                 <thead>
                     <tr>       
                         <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
@@ -144,7 +144,7 @@
                             </th>
                         </form>
 
-                        <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
+                        {{-- <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
                             <th style="text-align: center; width: 10%">Sangre
                                 @csrf
                                 <input type="hidden" id="id" name="id" value=5>
@@ -158,7 +158,7 @@
                                     @endif
                                 </button>
                             </th>
-                        </form> 
+                        </form>  --}}
                         
                         <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
                             <th style="text-align: center; width: 10%">Contacto
@@ -186,13 +186,13 @@
                             <td style="text-align: center;">{{$paciente->ci}}</td>
                             <td style="text-align: center;">#01245</td>
                             <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($paciente->fecha_nac,"index")}}</td>
-                            <td style="text-align: center;">
+                            {{-- <td style="text-align: center;">
                                 @if($paciente->t_sangre==null)
                                     <span class="red">No registrado</span>
                                 @else
                                     {{$paciente->t_sangre}}
                                 @endif
-                            </td> 
+                            </td>  --}}
                             <td style="text-align: center;">
                                 @if($paciente->celular==null)
                                     <span class="red">No registrado</span>
