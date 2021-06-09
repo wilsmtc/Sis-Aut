@@ -23,17 +23,20 @@ class PacienteController extends Controller
         if($request->search!=null){ 
             $seleccion=$request->seleccion;          
             $query= trim($request->get('search'));
-            $datos=Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->paginate(100);
-            $contador=Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->count();
+            $datos=Paciente::where([
+                [$seleccion, 'LIKE', '%'. $query . '%'],
+                ['estado',1]
+            ])->paginate(100);
+            $contador=$datos->count();
             $columna=0;
             if($contador==0)
-                return back()->with('mensajeerror','hay se encontro resultados para tu busqueda');
+                return back()->with('mensajeerror','No se encontro resultados para tu busqueda');
                 //return view('admin.paciente.index',['datos'=>$datos,'search'=>$query,'columna'=>$columna,'seleccion'=>$seleccion])->with('mensajeerror','No se encontró resultados para su busqueda');
             else
                 return view('admin.paciente.index',['datos'=>$datos,'search'=>$query,'columna'=>$columna,'seleccion'=>$seleccion]);
         }
         else{
-            $datos = Paciente::orderBy('id','desc')->paginate(10);
+            $datos = Paciente::where('estado',1)->orderBy('id','desc')->paginate(10);
             $columna=0;
             $search=null;
             $seleccion=null;
@@ -83,8 +86,17 @@ class PacienteController extends Controller
     public function ver($id)
     {
         $paciente = Paciente::findOrFail($id);
-        $signos_vitales=Signos_vitales::where('paciente_id',$paciente->id)->get();   
+        $signos_vitales=Signos_vitales::where([
+            ['estado',1],
+            ['paciente_id',$paciente->id]
+        ])->get();   
         $SVM=$signos_vitales->max(); 
+        $aux_fecha="";
+        if ($SVM!=null) {
+            $aux_consulta=Consulta::findOrFail($SVM->consulta_id);
+            $aux_ficha=Ficha::findOrFail($aux_consulta->ficha_id);
+            $aux_fecha=$aux_ficha->fecha;
+        } 
         $fichas=Ficha::where([
             ['paciente_id',$paciente->id],
             ['estado',1]
@@ -123,28 +135,26 @@ class PacienteController extends Controller
             $j++;
         }
         //dd($datos); 
-        return view('admin.paciente.ver', compact('paciente','SVM','datos'));
+        return view('admin.paciente.ver', compact('paciente','SVM','datos','aux_fecha'));
     }
 
     public function ordenar(Request $request)
     {
         if($request->search==null){
             if($request->id==1)
-                $datos = Paciente::orderBy('apellido_p')->paginate(10);
+                $datos = Paciente::where('estado',1)->orderBy('apellido_p')->paginate(10);
             else
                 if($request->id==2)
-                    $datos = Paciente::orderBy('ci')->paginate(10);
+                    $datos = Paciente::where('estado',1)->orderBy('ci')->paginate(10);
                 else
                     if($request->id==3)
-                        $datos = Paciente::orderBy('ci')->paginate(10);
+                        $datos = Paciente::where('estado',1)->orderBy('id')->paginate(10);
                     else
                         if($request->id==4)
-                            $datos = Paciente::orderBy('fecha_nac','desc')->paginate(10);
+                            $datos = Paciente::where('estado',1)->orderBy('fecha_nac','desc')->paginate(10);
                         else
                             if($request->id==5)
-                                $datos = Paciente::orderBy('t_sangre')->paginate(10);
-                            else
-                                $datos = Paciente::orderBy('celular')->paginate(10);
+                                $datos = Paciente::where('estado',1)->orderBy('celular')->paginate(10);
             $columna=$request->id;
             $search="";
             $seleccion=null;
@@ -156,22 +166,34 @@ class PacienteController extends Controller
             $seleccion=$request->selec; 
 
                 if($request->id==1)
-                    $datos = Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->orderBy('apellido_p')->paginate(100);
+                    $datos = Paciente::where([
+                        [$seleccion, 'LIKE', '%'. $query . '%'],
+                        ['estado',1]
+                        ])->orderBy('apellido_p')->paginate(100);
                 else
                     if($request->id==2)
-                        $datos = Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->orderBy('ci')->paginate(100);
+                        $datos = Paciente::where([
+                            [$seleccion, 'LIKE', '%'. $query . '%'],
+                            ['estado',1]
+                            ])->orderBy('ci')->paginate(100);
                     else
-                        if($request->id==50)
-                            $datos = Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->orderBy('ci')->paginate(100);
+                        if($request->id==3)
+                            $datos = Paciente::where([
+                                [$seleccion, 'LIKE', '%'. $query . '%'],
+                                ['estado',1]
+                                ])->orderBy('id')->paginate(100);
                         else
                             if($request->id==4)
-                                $datos = Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->orderBy('fecha_nac','desc')->paginate(100);
-    
+                                $datos = Paciente::where([
+                                    [$seleccion, 'LIKE', '%'. $query . '%'],
+                                    ['estado',1]
+                                    ])->orderBy('fecha_nac','desc')->paginate(100);
                             else
                                 if($request->id==5)
-                                    $datos = Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->orderBy('t_sangre')->paginate(100);
-                                else
-                                    $datos = Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->orderBy('celular')->paginate(100);
+                                    $datos = Paciente::where([
+                                        [$seleccion, 'LIKE', '%'. $query . '%'],
+                                        ['estado',1]
+                                        ])->orderBy('celular')->paginate(100);
                 $columna=$request->id;
                 $search=$request->search;
                 $seleccion=$request->selec;
@@ -274,5 +296,50 @@ class PacienteController extends Controller
             $image = base64_encode(file_get_contents(public_path("storage/datos/fotos/clinica/$clinica->logo")));
         $pdf=PDF::loadview('admin.paciente.ver_expediente', compact('clinica','image','historial','paciente','datos'));
         return $pdf->stream('ficha.pdf');
+    }
+
+    public function inactivar(Request $request, $id)
+    {
+        if ($request->ajax()) { 
+            try {
+                $request->request->add(['estado' => 0]);
+                Paciente::findOrFail($id)->update($request->all());
+                $aux=1;
+            } catch (\Illuminate\Database\QueryException $e) {
+                $aux=0;
+            }          
+            if ($aux==1) {
+                return response()->json(['mensaje' => 'ok']);
+            } else {
+                return response()->json(['mensaje' => 'ng']);
+            }
+        } else {
+            abort(404);
+        } 
+    }
+    public function activar(Request $request, $id)
+    {
+        if ($request->ajax()) { 
+            try {
+                $request->request->add(['estado' => 1]);
+                Paciente::findOrFail($id)->update($request->all());
+                $aux=1;
+            } catch (\Illuminate\Database\QueryException $e) {
+                $aux=0;
+            }          
+            if ($aux==1) {
+                return response()->json(['mensaje' => 'ok']);
+            } else {
+                return response()->json(['mensaje' => 'ng']);
+            }
+        } else {
+            abort(404);
+        } 
+    }
+    public function index_inactivo()
+    {
+        $datos = Paciente::where('estado',0)->orderBy('id')->get();
+        return view('admin.paciente.inactivo', compact('datos'));
+        
     }
 }

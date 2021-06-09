@@ -16,7 +16,8 @@ class CreateFichaTable extends Migration
             $table->foreign('servicio_id')->references('id')->on('servicio')->onDelete('restrict');           
             $table->date('fecha');
             $table->Time('hora');
-            $table->enum('estado',['1','0'])->default('0');
+            $table->enum('estado',['1','0','2'])->default('0');
+            $table->Integer('turno');
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_spanish_ci';
             $table->timestamps();

@@ -1,20 +1,22 @@
-@extends("theme.$theme.layout")
+{{-- @extends("theme.$theme.layout")
 @section('titulo')
     Crear Ficha
 @endsection
 @section("scripts")
-<script src="{{asset("assets/pages/scripts/alert/alert.js")}}" type="text/javascript"></script>
-<script src="{{asset("assets/pages/scripts/ficha/validar.js")}}" type="text/javascript"></script>
+
+    <script src="{{asset("assets/pages/scripts/alert/alert.js")}}" type="text/javascript"></script>
+    <script src="{{asset("assets/pages/scripts/ficha/validar.js")}}" type="text/javascript"></script>
+
     <script>
-        function mostrar(id) {
-            console.log(id);
-            if (id !=null) {
-                $("#buscar").show();
+            function mostrar(id) {
+                console.log(id);
+                if (id !=null) {
+                    $("#buscar").show();
+                }
+                else
+                    $("#buscar").hide();
             }
-            else
-                $("#buscar").hide();
-        }
-    </script>
+        </script>
 @endsection
 @section('contenido')
 <div class="page-header">
@@ -96,7 +98,7 @@
                                     <td style="text-align: center;">{{$paciente->ci}}</td>
                                     <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($paciente->fecha_nac,"index")}}</td>
                                     <td style="text-align: center;">
-                                        <div class="hidden-sm hidden-xs btn-group">                                    
+                                        <div class="hidden-sm hidden-xs btn-group">                                   
                                             <button  class="btn btn-xs btn-info" data-toggle="modal" data-target="#CrearFicha{{$paciente->id}}" title="registrar ficha">
                                                 <i class="fa fa-book bigger-120"></i>
                                             </button>
@@ -274,4 +276,4 @@
 </div>
 
 @endsection
-
+ --}}

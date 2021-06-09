@@ -164,7 +164,7 @@
                 </td>
             </tr>
         </table><br>
-        @if ($receta!=null)
+        {{-- @if ($receta!=null)
             <h3 style="text-align: center"><FONT COLOR='#0f0fa0'><u>RECETA MÉDICA</u></FONT></h3>
             <table  width="100%" border="1">
                 <tr style="background:rgb(192, 221, 255)">
@@ -197,7 +197,7 @@
                     </td>
                 </tr>
             </table>       
-        @endif
+        @endif --}}
         <br><br><br><br>
         <table  width="100%" align="center">
             <tr>

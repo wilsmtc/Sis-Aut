@@ -64,13 +64,13 @@
                 <div class="col-xs-2">
                     <button class="btn btn-primary" type="button" id="btnActualizar_R" style="display: none;"><i class="fa fa-wrench"> Actualizar</i></button>
                 </div>
-                {{-- <div class="col-xs-2">
-                    <button class="btn btn-warning" type="button" id="btnImprimir_R" style="display: none;"><i class="fa fa-print"> IMPRIMIR</i></button>
-                </div> --}}
-            </div>
-              
-        </form>
-        
+        </form>        
+                <div class="col-xs-2">
+                    <form action="{{route('imprimir_receta', ['id' => $consulta->id])}}" target="{{$consulta->id}}">
+                        <button class="btn btn-warning" type="submit" id="btnImprimir_R" style="display: none;"><i class="fa fa-print"> IMPRIMIR</i></button>
+                    </form>
+                </div>
+            </div>      
         <div id="divElements">
             <div class="form-group" id="">
             </div>

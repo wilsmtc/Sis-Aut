@@ -3,8 +3,8 @@
     Paciente
 @endsection
 @section("scripts")
-    <script src="{{asset("assets/pages/scripts/alert/alert.js")}}" type="text/javascript"></script>
-    <script>
+<script src="{{asset("assets/pages/scripts/paciente/estado.js")}}" type="text/javascript"></script>
+<script>
         function mostrar(id) {
             console.log(id);
             if (id !=null) {
@@ -22,7 +22,7 @@
         @if(Auth::user()->rol->añadir == 1)      
             <div class="box-tools pull-right">
                 <a href="{{route('crear_paciente')}}" class="btn btn-block btn-success btn-sm">
-                    <i class="fa fa-fw fa-plus-circle"></i> Crear Personal
+                    <i class="fa fa-fw fa-plus-circle"></i> Crear Paciente
                 </a>
             </div>
         @endif
@@ -42,7 +42,7 @@
                         <option value="apellido_p">Apellido Paterno</option>
                         <option value="apellido_m">Apellido Materno</option>
                         <option value="ci">N° de Carnet</option>
-                        <option value="expediente">N° de Expediente</option>
+                        <option value="id">N° de Expediente</option>
                         <option value="celular">Telf/Cel</option>              
                     </select>               
                 </div>
@@ -79,7 +79,23 @@
         <div class="box-body">
             <table id="tabla" class="table  table-bordered table-hover">
                 <thead>
-                    <tr>       
+                    <tr>   
+                        <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
+                            <th style="text-align: center; width: 12%">Expediente 
+                                @csrf
+                                <input type="hidden" id="id" name="id" value=3>
+                                <input type="hidden" id="search" name="search" value="{{old('search', $search ?? '')}}">
+                                <input type="hidden" id="selec" name="selec" value="{{$seleccion}}" >
+                                <button  type="submit" class="pull-right" style="border: 0">
+                                    @if($columna==3)
+                                        <i class="glyphicon glyphicon-triangle-bottom pull-right" style="color: rgb(11, 102, 155)"></i>
+                                    @else
+                                        <i class="glyphicon glyphicon-sort pull-right" ></i>
+                                    @endif
+                                </button>
+                            </th>
+                        </form>
+
                         <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
                             <th style="text-align: center; width: 36%">Nombres y Apellidos
                                 @csrf
@@ -112,21 +128,7 @@
                             </th>
                         </form>
 
-                        <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
-                            <th style="text-align: center; width: 12%">Expediente 
-                                @csrf
-                                <input type="hidden" id="id" name="id" value=3>
-                                <input type="hidden" id="search" name="search" value="{{old('search', $search ?? '')}}">
-                                <input type="hidden" id="selec" name="selec" value="{{$seleccion}}" >
-                                <button  type="submit" class="pull-right" style="border: 0">
-                                    @if($columna==3)
-                                        <i class="glyphicon glyphicon-triangle-bottom pull-right" style="color: rgb(11, 102, 155)"></i>
-                                    @else
-                                        <i class="glyphicon glyphicon-sort pull-right" ></i>
-                                    @endif
-                                </button>
-                            </th>
-                        </form>
+                        
 
                         <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
                             <th style="text-align: center; width: 9%">Edad 
@@ -144,30 +146,14 @@
                             </th>
                         </form>
 
-                        {{-- <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
-                            <th style="text-align: center; width: 10%">Sangre
+                        <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
+                            <th style="text-align: center; width: 10%">Contacto
                                 @csrf
                                 <input type="hidden" id="id" name="id" value=5>
                                 <input type="hidden" id="search" name="search" value="{{old('search', $search ?? '')}}">
                                 <input type="hidden" id="selec" name="selec" value="{{$seleccion}}" >
                                 <button  type="submit" class="pull-right" style="border: 0">
                                     @if($columna==5)
-                                        <i class="glyphicon glyphicon-triangle-bottom pull-right" style="color: rgb(11, 102, 155)"></i>
-                                    @else
-                                        <i class="glyphicon glyphicon-sort pull-right" ></i>
-                                    @endif
-                                </button>
-                            </th>
-                        </form>  --}}
-                        
-                        <form action="{{route('ordenar_paciente')}}" method="POST" name="form2">
-                            <th style="text-align: center; width: 10%">Contacto
-                                @csrf
-                                <input type="hidden" id="id" name="id" value=6>
-                                <input type="hidden" id="search" name="search" value="{{old('search', $search ?? '')}}">
-                                <input type="hidden" id="selec" name="selec" value="{{$seleccion}}" >
-                                <button  type="submit" class="pull-right" style="border: 0">
-                                    @if($columna==6)
                                         <i class="glyphicon glyphicon-triangle-bottom pull-right" style="color: rgb(11, 102, 155)"></i>
                                     @else
                                         <i class="glyphicon glyphicon-sort pull-right" ></i>
@@ -182,9 +168,9 @@
                 <tbody>
                     @foreach ($datos as $paciente)
                         <tr>
-                            <td style="text-align: center;">{{$paciente->nombre}} {{$paciente->apellido_p}} {{$paciente->apellido_m}}</td>
-                            <td style="text-align: center;">{{$paciente->ci}}</td>
-                            <td style="text-align: center;">#01245</td>
+                            <td style="text-align: center;">{{$num=MyHelper::num_expediente($paciente->id)}}</td>
+                            <td style="text-align: center;">{{$paciente->apellido_p}} {{$paciente->apellido_m}} {{$paciente->nombre}} </td>
+                            <td style="text-align: center;">{{$paciente->ci}}</td>      
                             <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($paciente->fecha_nac,"index")}}</td>
                             {{-- <td style="text-align: center;">
                                 @if($paciente->t_sangre==null)
@@ -215,13 +201,13 @@
                                 @endif
                                 @if(Auth::user()->rol->eliminar == 1)    
                                     <div class="hidden-sm hidden-xs btn-group">  
-                                        <form action="{{route('eliminar_paciente', ['id' => $paciente->id])}}" class="d-inline form-eliminar " method="POST" id="form-eliminar">
-                                            @csrf @method("delete")
-                                            <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Eliminar Paciente">
-                                                <i class="fa fa-fw fa-close"></i>
+                                        <form action="{{route('inactivar_paciente', ['id' => $paciente->id])}}" class="d-inline form-estado" method="POST" id="form-estado">
+                                            @csrf @method("put")
+                                            <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="dar de baja personal">
+                                                <i class="fa fa-fw fa-ban"></i>
                                             </button>
                                         </form>
-                                    </div> 
+                                    </div>
                                 @endif                       
                             </td>
                         </tr>

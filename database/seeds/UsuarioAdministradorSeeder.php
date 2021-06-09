@@ -176,7 +176,7 @@ class UsuarioAdministradorSeeder extends Seeder
         ]); 
         DB::table('menu')->insert([
             'menu_id'=>0,
-            'nombre'=>'Fichaje',
+            'nombre'=>'Atención',
             'url'=>'admin/ficha/#',
             'orden'=>8,
             'icono'=>'fa-book'
@@ -195,6 +195,13 @@ class UsuarioAdministradorSeeder extends Seeder
                     'url'=>'admin/servicio',
                     'orden'=>2,
                     'icono'=>'fa-asterisk'
+                ]);
+                DB::table('menu')->insert([
+                    'menu_id'=>2,
+                    'nombre'=>'Reportes',
+                    'url'=>'admin/reportes',
+                    'orden'=>3,
+                    'icono'=>'fa-book'
                 ]);
                 DB::table('menu')->insert([
                     'menu_id'=>3,
@@ -267,6 +274,13 @@ class UsuarioAdministradorSeeder extends Seeder
                     'icono'=>'fa-search'
                 ]);
                 DB::table('menu')->insert([
+                    'menu_id'=>7,
+                    'nombre'=>'Ver Paciente con Baja',
+                    'url'=>'admin/paciente_inactivo',
+                    'orden'=>2,
+                    'icono'=>'fa-user'
+                ]);
+                DB::table('menu')->insert([
                     'menu_id'=>8,
                     'nombre'=>'Asignar Ficha',
                     'url'=>'admin/ficha',
@@ -283,9 +297,16 @@ class UsuarioAdministradorSeeder extends Seeder
                 DB::table('menu')->insert([
                     'menu_id'=>8,
                     'nombre'=>'Enfermeria',
-                    'url'=>'admin/ficha/enfermeria',
+                    'url'=>'admin/enfermeria',
                     'orden'=>3,
                     'icono'=>'fa-book'
+                ]);
+                DB::table('menu')->insert([
+                    'menu_id'=>8,
+                    'nombre'=>'Internación',
+                    'url'=>'admin/internacion',
+                    'orden'=>4,
+                    'icono'=>'fa-bed'
                 ]);
               
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>1]);
@@ -311,6 +332,9 @@ class UsuarioAdministradorSeeder extends Seeder
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>21]);
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>22]);
         DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>23]);
+        DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>24]);
+        DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>25]);
+        DB::table('menu_rol')->insert(['rol_id'=>1,'menu_id'=>26]);
         $faker=Faker::create();
         for($i=0;$i<1000;$i++){
             DB::table('paciente')->insert([
@@ -322,6 +346,7 @@ class UsuarioAdministradorSeeder extends Seeder
                 'celular'=>$faker->unique()->numberBetween($min = 10000, $max = 999999),
                 'fecha_nac'=>$faker->dateTimeBetween($startDate = '-100 years', $endDate = 'now'),
                 'genero'=>$faker->randomElement(['Hombre', 'Mujer']),
+                'created_at'=>$faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now'),
                 //'t_sangre'=>$faker->randomElement(['O negativo', 'O positivo','A negativo','A positivo','B negativo','B positivo','AB negativo','AB positivo',null]),
             ]);
         }
@@ -333,7 +358,8 @@ class UsuarioAdministradorSeeder extends Seeder
             'direccion'=>'Roncal #201',
             'celular'=>$faker->unique()->numberBetween($min = 10000, $max = 999999),
             'fecha_nac'=>'1900-01-01',
-            'genero'=>$faker->randomElement(['Hombre', 'Mujer']),
+            'genero'=>'Hombre',
+            'created_at'=>$faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now'),
             //'t_sangre'=>$faker->randomElement(['O negativo', 'O positivo','A negativo','A positivo','B negativo','B positivo','AB negativo','AB positivo',null]),
         ]);
         for($i=0;$i<500;$i++){
@@ -360,7 +386,8 @@ class UsuarioAdministradorSeeder extends Seeder
         ]);
         DB::table('servicio')->insert([
             'nombre'=>'Internaciones',
-            'descripcion'=>'La sala de corta estancia ofrece el servicio en un ambiente agradable, con infraestructura acorde a la complejidad del problema, también brinda al usuario atención y prevención.'
+            'descripcion'=>'La sala de corta estancia ofrece el servicio en un ambiente agradable, con infraestructura acorde a la complejidad del problema, también brinda al usuario atención y prevención.',
+            'cama'=>'[{"estado":"0"},{"estado":"0"},{"estado":"0"}]'
         ]);
         DB::table('servicio')->insert([
             'nombre'=>'Ginecologia',

@@ -1,4 +1,4 @@
-<div class="row">
+{{-- <div class="row">
     <div class="col-xs-12">
         <div>
             <div id="user-profile-1" class="user-profile row">
@@ -45,17 +45,15 @@
                                 </div>
                             </div>
                             <div class="profile-info-row">
-                                <div class="profile-info-name"><u>Doctor</u>:</div>
-                                <div class="profile-info-value">
-                                    <select id="seleccion" name="seleccion" class="col-xs-12" onChange=mostrar(this.value);>
-                                        <option value="">Seleccione doctor</option>
-                                        <option value="">Benigno</option>
-                                        <option value="apellido_p">Cristian</option>
-                                        <option value="apellido_m">Paola</option>
-                                        <option value="ci">Ingrid</option>
-                                    </select>
+                                <div class="profile-info-name"><u>Horarios</u>:</div>
+                                <div class="profile-info-value" id="div_select">
+                                    <button type="button" class="form-control btn-primary" id="horario" name="horario" style="display: block"><span class="white">ver horario</span></button>
+                                    <div id="div_select_horario" style="display: none">
+
+                                    </div>
                                 </div>
                             </div>
+                            
                             <input type="hidden" id="paciente_id" name="paciente_id" value="{{$paciente->id}}">
                             <input type="hidden" id="servicio_id" name="servicio_id" value="{{$servicio->id}}">
                         </div>
@@ -64,4 +62,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}

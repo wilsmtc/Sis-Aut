@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Calendario_consulta;
 use App\Models\Admin\Clinica;
 use App\Models\Admin\Ficha;
 use App\Models\Admin\Paciente;
@@ -67,23 +68,67 @@ class FichaController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
+        $horarios=Calendario_consulta::where('fecha',$request->fecha)->get();
+        $cadena=$horarios[0]["horario"];
+        $vector=json_decode($cadena);//convierte una cadena en vector
+        $vector[($request->hora)-1]->estado="ocupado";
+        $hora=$vector[($request->hora)-1]->hora;
+        $nueva_cadena=json_encode($vector);//convierte un vector en cadena
+        $horario=Calendario_consulta::findOrFail($horarios[0]["id"]);
+        $horario->update([
+            'horario'=>$nueva_cadena        
+        ]);
+        $request->request->add(['turno' => $request->hora]);
+        $request->request->add(['hora' => $hora]);
         Ficha::create($request->all());
-
         return redirect("admin/ficha/consulta")->with('mensaje','Ficha creado con exito');
     }
 
 
     public function edit($id)
     {
-        //
+        $ficha=Ficha::findOrFail($id);
+        $paciente=Paciente::findOrFail($ficha->paciente_id);
+        return view('admin.ficha.editar', compact('ficha','paciente'));
     }
 
 
     public function update(Request $request, $id)
     {
         //dd($request->all());
-        Ficha::findOrFail($id)->update($request->all());
-        return redirect("admin/ficha/consulta")->with('mensaje','Ficha actualizada con exito');
+        if($request->hora){
+            $ficha=Ficha::findOrFail($id);
+            $horarios=Calendario_consulta::where('fecha',$ficha->fecha)->get();
+            $cadena=$horarios[0]["horario"];
+            $vector=json_decode($cadena);//convierte una cadena en vector
+            $vector[($ficha->turno)-1]->estado="libre";
+            $nueva_cadena=json_encode($vector);//convierte un vector en cadena
+            $horario=Calendario_consulta::findOrFail($horarios[0]["id"]);
+            $horario->update([
+                'horario'=>$nueva_cadena        
+            ]);
+
+            $horarios=Calendario_consulta::where('fecha',$request->fecha)->get();
+            $cadena=$horarios[0]["horario"];
+            $vector=json_decode($cadena);//convierte una cadena en vector
+            $vector[($request->hora)-1]->estado="ocupado";
+            $hora=$vector[($request->hora)-1]->hora;
+            $nueva_cadena=json_encode($vector);//convierte un vector en cadena
+            $horario=Calendario_consulta::findOrFail($horarios[0]["id"]);
+            $horario->update([
+                'horario'=>$nueva_cadena        
+            ]);
+
+            $request->request->add(['turno' => $request->hora]);
+            $request->request->add(['hora' => $hora]);
+            Ficha::findOrFail($id)->update($request->all());
+            return redirect("admin/ficha/consulta")->with('mensaje','Ficha actualizada con exito');
+        }
+        else{
+            return redirect("admin/ficha/consulta")->with('mensaje','Ficha actualizada con exito');
+        }
+        // Ficha::findOrFail($id)->update($request->all());
+        // return redirect("admin/ficha/consulta")->with('mensaje','Ficha actualizada con exito');
     }
 
 
@@ -91,6 +136,16 @@ class FichaController extends Controller
     {
         if ($request->ajax()) { 
             try {
+                $ficha=Ficha::findOrFail($id);
+                $horarios=Calendario_consulta::where('fecha',$ficha->fecha)->get();
+                $cadena=$horarios[0]["horario"];
+                $vector=json_decode($cadena);//convierte una cadena en vector
+                $vector[($ficha->turno)-1]->estado="libre";
+                $nueva_cadena=json_encode($vector);//convierte un vector en cadena
+                $horario=Calendario_consulta::findOrFail($horarios[0]["id"]);
+                $horario->update([
+                    'horario'=>$nueva_cadena        
+                ]);
                 //Eliminar registro
                 Ficha::destroy($id);
                 $aux=1;
@@ -119,8 +174,36 @@ class FichaController extends Controller
         return $pdf->stream('ficha.pdf');
     }
 
-    public function calendario()
+    public function registrar($id)
     {
-        return view('admin.ficha.calendario');
+        $paciente=Paciente::findOrFail($id);
+        return view('admin.ficha.registrar', compact('paciente'));
+    }
+    
+    public function horario(Request $request)
+    {      
+        if ($request->ajax()) {
+            $fecha=request()->fecha;
+            $aux1=Calendario_consulta::where('fecha',$fecha)->get();
+            if($aux1->count()==0){
+                $cadena="<span class="."blue".">no hay turnos disponibles, elija otra fecha</span>";
+                return response()->json(['mensaje' =>'no','horario' =>$cadena]);
+            }
+            else{
+                $horarios=$aux1[0]["horario"];
+                $horarios=json_decode($horarios);
+                $cadena="<select id='hora' name='hora' class="."form-control"." required>";
+                $cadena=$cadena."<option value=''>  Elija un turno  </option>";
+                foreach ($horarios as $horario) {
+                    if($horario->estado=='libre'){
+                        $cadena=$cadena.'<option value='.$horario->orden.'>'. $horario->hora.'</option>';
+                    }
+                }
+                $cadena."</select>";
+                return response()->json(['mensaje' =>'si','horario' =>$cadena]);
+            }
+        } else {
+            abort(404);
+        } 
     }
 }

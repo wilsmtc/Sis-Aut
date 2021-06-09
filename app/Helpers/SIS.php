@@ -85,4 +85,64 @@ class MyHelper {
         $usuarios = Usuario::where('estado',2)->get();
         return $usuarios;
     }
+
+    public static function num_expediente($id){
+        $length = 4;
+        $char = 0;
+        $type = 'd';
+        $format = "%{$char}{$length}{$type}";
+        $num=sprintf($format, $id);
+        return $num;
+    }
+
+    public static function Diferencia_inicio_fin($fecha_i,$fecha_f,$aux){
+        $fecha_fin = new \DateTime($fecha_f);
+        $fecha_ini =  new \DateTime($fecha_i);
+        $diferencia = $fecha_fin->diff($fecha_ini);
+        $edad = array(
+            "y" => " Años ",
+            "m" => " Meses ",
+            "d" => " Días ",
+        );
+        if($diferencia->y==1)
+            $edad["y"]=" Año ";
+        if($diferencia->m==1)
+            $edad["m"]=" Mes ";
+        if($diferencia->d==1)
+            $edad["d"]=" Dia ";
+
+        if($aux=="index"){
+            if($diferencia->y>0)
+                $edad=$diferencia->y.$edad["y"];
+            else
+                if($diferencia->m>0)
+                    $edad=$diferencia->m.$edad["m"];
+                else
+                    $edad=$diferencia->d.$edad["d"];
+            return $edad;
+        }
+        else{
+            if($diferencia->y==0)
+                if($diferencia->m==0)
+                    $edad=$diferencia->d.$edad["d"];
+                else
+                    if($diferencia->d==0)
+                        $edad=$diferencia->m.$edad["m"];
+                    else
+                        $edad=$diferencia->m.$edad["m"]." y ".$diferencia->d.$edad["d"]; 
+            else
+                if($diferencia->m==0)
+                    if($diferencia->d==0)
+                        $edad=$diferencia->y.$edad["y"];
+                    else
+                        $edad=$diferencia->y .$edad["y"]." y ".$diferencia->d.$edad["d"];  
+                else
+                    if($diferencia->d==0)
+                        $edad=$diferencia->y .$edad["y"].$diferencia->m.$edad["m"];
+                    else
+                        $edad=$diferencia->y .$edad["y"].$diferencia->m.$edad["m"]." y ".$diferencia->d.$edad["d"];      
+            return $edad; 
+        }       
+    }
+
 }

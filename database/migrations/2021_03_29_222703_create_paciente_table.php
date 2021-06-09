@@ -20,9 +20,11 @@ class CreatePacienteTable extends Migration
             $table->date('fecha_nac');
             $table->string('genero',6);
             $table->string('foto',20)->nullable();
+            $table->enum('estado',['1','0'])->nullable()->default('1');
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_spanish_ci';
-            $table->timestamps();
+            $table->date('created_at')->nullable();
+            $table->date('updated_at')->nullable();
         });
     }
 

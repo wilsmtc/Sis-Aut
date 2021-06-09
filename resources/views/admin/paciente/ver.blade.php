@@ -129,7 +129,7 @@
             </div>
             @else
                 <div class="center">
-                <span class="blue center">Signos Vitales de su ultima consulta</span>  
+                    <span class="blue center">Signos Vitales de su ultima consulta ({{$aux_fecha}})</span>  
                 </div>
                 <div style="text-align: ">
                     <table class="table-bordered table-hover" >

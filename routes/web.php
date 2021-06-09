@@ -44,6 +44,9 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
             Route::get('clinica', 'ClinicaController@index') ->name('clinica');
             Route::get('clinica/{id}/editar', 'ClinicaController@edit') ->name('editar_clinica')->middleware('permisoeditar');
             Route::put('clinica/{id}', 'ClinicaController@update') ->name('actualizar_clinica');
+            //rutas de reportes
+            Route::get('reportes', 'ReportesController@index') ->name('reportes');
+            Route::get('reporte/imprimir', 'ReportesController@imprimir') ->name('imprimir_reporte');
     });
     //ruta para editar el usuario
     Route::get('usuario/{id}/editar_usuario', 'UsuarioController@edit_user') ->name('editar_mi_usuario');
@@ -79,16 +82,18 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
     Route::post('paciente', 'PacienteController@ordenar') ->name('ordenar_paciente');
     Route::get('paciente/{id}/consulta', 'PacienteController@consulta_paciente') ->name('consulta_paciente');
     Route::get('paciente/{id}/ver_expediente', 'PacienteController@ver_expediente') ->name('ver_expediente');
-
+    Route::put('paciente/{id}/inactivar', 'PacienteController@inactivar') ->name('inactivar_paciente')->middleware('permisoeliminar');
+    Route::put('paciente/{id}/activar', 'PacienteController@activar') ->name('activar_paciente')->middleware('permisoeditar');
+    Route::get('paciente_inactivo', 'PacienteController@index_inactivo') ->name('paciente_inactivo');
     //rutas de cargo
     Route::get('cargo', 'CargoController@index') ->name('cargo');
     Route::get('cargo/crear', 'CargoController@create') ->name('crear_cargo')->middleware('permisocrear');
     Route::get('cargo/{id}/editar', 'CargoController@edit') ->name('editar_cargo')->middleware('permisoeditar');
     Route::post('cargo', 'CargoController@store') ->name('guardar_cargo');
     Route::put('cargo/{id}', 'CargoController@update') ->name('actualizar_cargo');
-    Route::delete('unidad/{id}', 'CargoController@destroy')->name('eliminar_cargo')->middleware('permisoeliminar');
+    Route::delete('cargo/{id}/eliminar', 'CargoController@destroy')->name('eliminar_cargo')->middleware('permisoeliminar');
     //rutas de servicio
-    Route::get('servicio', 'ServicioController@index') ->name('servicio');
+    Route::get('servicio', 'ServicioController@index') ->name('servicio')->middleware('permisoadmin');
     Route::get('servicio/crear', 'ServicioController@create') ->name('crear_servicio')->middleware('permisocrear');
     Route::get('servicio/{id}/editar', 'ServicioController@edit') ->name('editar_servicio')->middleware('permisoeditar');
     Route::post('servicio', 'ServicioController@store') ->name('guardar_servicio');
@@ -97,10 +102,14 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
         //Rutas de Ficha
     Route::get('ficha', 'FichaController@index') ->name('ficha');
     Route::get('ficha/{id}/crear', 'FichaController@create') ->name('crear_ficha')->middleware('permisocrear');
+    Route::get('ficha/{id}/registrar', 'FichaController@registrar') ->name('registrar_ficha')->middleware('permisocrear');
     Route::post('ficha', 'FichaController@store') ->name('guardar_ficha');
+    Route::get('ficha/{id}/editar', 'FichaController@edit') ->name('editar_ficha')->middleware('permisoeditar');
     Route::put('ficha/{id}', 'FichaController@update') ->name('actualizar_ficha');
     Route::delete('ficha/{id}/eliminar', 'FichaController@destroy')->name('eliminar_ficha')->middleware('permisoeliminar');
     Route::get('ficha/{id}/imprimir', 'FichaController@imprimir') ->name('imprimir_ficha');
+    Route::get('ficha/horario', 'FichaController@horario') ->name('horario_ficha');
+
         //Rutas de consulta
     Route::get('ficha/consulta', 'ConsultaController@index') ->name('consulta');
     Route::get('ficha/consulta/{id}/crear', 'ConsultaController@create') ->name('crear_consulta')->middleware('permisocrear');  
@@ -115,8 +124,35 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
     Route::get('historial/{id}/imprimir', 'ConsultaController@imprimir_historial') ->name('imprimir_historial');
     Route::get('consulta/{id}/imprimir', 'ConsultaController@imprimir_consulta') ->name('imprimir_consulta');
     Route::get('gabinete/{id}/imprimir', 'ConsultaController@imprimir_gabinete') ->name('imprimir_gabinete');
+    Route::get('receta/{id}/imprimir', 'ConsultaController@imprimir_receta') ->name('imprimir_receta');
     Route::get('consulta/{id}/terminar', 'ConsultaController@terminar_consulta') ->name('terminar_consulta');
+        //rutas de calendario
+    Route::get('calendario', 'CalendarioController@calendario') ->name('calendario');
+    Route::post('calendario/guardar', 'CalendarioController@guardar_calendario') ->name('guardar_calendario');
+    Route::resource('eventos', 'CalendarioController');
+    Route::get('calendario/verificar', 'CalendarioController@verificar') ->name('verificar');
+    Route::put('calendario/actualizar', 'CalendarioController@update') ->name('actualizar_calendario');
+    Route::delete('calendario/eliminar', 'CalendarioController@destroy') ->name('eliminar_calendario');
 
-    Route::get('calendario', 'FichaController@calendario') ->name('calendario');
+        //rutas de enfermeria
+    Route::get('enfermeria', 'EnfermeriaController@index') ->name('enfermeria');
+    Route::get('enfermeria/crear', 'EnfermeriaController@create') ->name('crear_enfermeria')->middleware('permisocrear');
+    Route::get('enfermeria/{id}/editar', 'EnfermeriaController@edit') ->name('editar_enfermeria')->middleware('permisoeditar');
+    Route::post('enfermeria', 'EnfermeriaController@store') ->name('guardar_enfermeria');
+    Route::put('enfermeria/{id}', 'EnfermeriaController@update') ->name('actualizar_enfermeria');
+    Route::delete('enfermeria/{id}', 'EnfermeriaController@destroy')->name('eliminar_enfermeria')->middleware('permisoeliminar');
+        // rutas de internacion
+    Route::get('internacion', 'InternacionController@index') ->name('internacion');
+    Route::get('internacion/{id}/crear', 'InternacionController@create') ->name('crear_internacion')->middleware('permisocrear');
+    Route::post('internacion', 'InternacionController@store') ->name('guardar_internacion');
+    Route::get('internacion/{id}/editar', 'InternacionController@edit') ->name('editar_internacion')->middleware('permisoeditar');
+    Route::put('internacion/{id}', 'InternacionController@update') ->name('actualizar_internacion');
+    Route::get('internacion/{id}/imprimir', 'InternacionController@imprimir_entrada') ->name('imprimir_internacion');
+    Route::get('internacion/{id}/alta', 'InternacionController@solicitar_alta') ->name('alta')->middleware('permisocrear');
+    Route::post('internacion/{id}/alta', 'InternacionController@dar_alta') ->name('dar_alta');
+    Route::get('internacion_alta', 'InternacionController@index_alta') ->name('internacion_alta');
+    Route::get('internacion/{id}/retiro_forzado', 'InternacionController@imprimir_forzoso') ->name('retiro_forzoso');
+    Route::get('internacion/{id}/imprimir_internacion', 'InternacionController@imprimir_todo') ->name('imprimir_todo');
+
 
 });

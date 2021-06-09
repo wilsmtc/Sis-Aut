@@ -5,6 +5,7 @@
 @section("scripts")
 <script src="{{asset("assets/pages/scripts/alert/alert.js")}}" type="text/javascript"></script>
 <script src="{{asset("assets/pages/scripts/ficha/validar.js")}}" type="text/javascript"></script>
+<script src="{{asset("assets/pages/scripts/datatables/datatables.js")}}" type="text/javascript"></script>
     <script>
         function mostrar(id) {
             console.log(id);
@@ -23,6 +24,9 @@
             Registrar Ficha Para:          
         </small>
         {{$servicio->nombre}}
+        <button class="btn btn-purple pull-right" onclick="location.href='{{route('calendario')}}'">
+            <i class="fa fa-calendar"> Agenda de Atención</i>
+        </button>
     </h1>
 </div>
 <div class="row">
@@ -40,7 +44,7 @@
                         <option value="apellido_p">Apellido Paterno</option>
                         <option value="apellido_m">Apellido Materno</option>
                         <option value="ci">N° de Carnet</option>
-                        <option value="ci">N° de Expediente</option>
+                        <option value="id">N° de Expediente</option>
                         <option value="celular">Telf/Cel</option>              
                     </select>               
                 </div>
@@ -59,73 +63,70 @@
                 </div>
             </form>
         </div>
-        @if($search)
+        @if($datos)
+            @if ($datos->count()==0)
+            <div class="col-xs-12">                
+                <div class="alert alert-danger">                    
+                    <i class="ace-icon fa fa-hand-o-right"></i>
+                    Busqueda sin resultados	
+                    <a href="{{route('consulta')}}" class="ver-curriculum btn btn-primary btn-xs tooltipC pull-right" title="volver">
+                        <i class="fa fa-fw fa-reply-all"></i>																			
+                    </a>
+                </div>
+            </div>
+            @if(Auth::user()->rol->añadir == 1)      
+                <div class="box-tools">
+                    <a href="{{route('crear_paciente')}}" class="btn btn-block btn-success btn-xl">
+                        <i class="fa fa-fw fa-plus-circle"></i> registrar Nuevo Paciente
+                    </a>
+                </div>
+            @endif
+        @else
             <div class="col-xs-12">                
                 <div class="alert alert-info">                    
                     <i class="ace-icon fa fa-hand-o-right"></i>
                     Los resultados de tu busqueda <b>'{{$search}}'</b> son:
-                    <a href="{{route('crear_ficha', ['id' => $servicio->id])}}" class="ver-curriculum btn btn-primary btn-xs tooltipC pull-right" title="volver">
+                    <a href="{{route('consulta')}}" class="ver-curriculum btn btn-primary btn-xs tooltipC pull-right" title="volver">
                         <i class="fa fa-fw fa-reply-all"></i>																			
                     </a>	
                 </div>
             </div>
-        @endif
-        @if($datos)
-        <span class="blue center"><h3>Resultados </h3></span>
-            <div class="box-body">
-                <table id="tabla" class="table  table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th style="text-align: center; width: 10%">Expediente</th>
-                            <th style="text-align: center; width: 50%">Nombres y Apellidos</th>
-                            <th style="text-align: center; width: 10%">N° de Carnet</th>
-                            <th style="text-align: center; width: 10%">Edad</th>
-                            <th style="text-align: center; width: 10%">Opción</th>                           
-                        </tr>
-                    </thead>               
-                        <tbody>
-                            @foreach ($datos as $paciente)
-                                <tr>
-                                    <td style="text-align: center;">00{{$paciente->id}}</td>
-                                    <td style="text-align: center;">{{$paciente->nombre}} {{$paciente->apellido_p}} {{$paciente->apellido_m}}</td>
-                                    <td style="text-align: center;">{{$paciente->ci}}</td>
-                                    <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($paciente->fecha_nac,"index")}}</td>
-                                    <td style="text-align: center;">
-                                        <div class="hidden-sm hidden-xs btn-group">                                    
-                                            <button  class="btn btn-xs btn-info" data-toggle="modal" data-target="#CrearFicha{{$paciente->id}}" title="registrar ficha">
-                                                <i class="fa fa-book bigger-120"></i>
-                                            </button>
-                                            <div class="modal modal-info fade in" id="CrearFicha{{$paciente->id}}" tabindex="-1">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content" style="background: rgb(185, 185, 185)">
-                                                        <div class="modal-header " style="background: rgb(95, 95, 104)">
-                                                            <button type="button" class="white close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                            <h4 class="white modal-title" style="text-align: center"><b>Crear Ficha</b></h4>
-                                                        </div>
-                                                        <form class="form-horizontal" action="{{route ('guardar_ficha')}}" id="form-general" method="POST">
-                                                            @csrf
-                                                            <div class="modal-body">
-                                                            
-                                                                @include('admin.ficha.form')
-                                                            
-                                                            </div>
-                                                            <div class="modal-footer" style="background: rgb(88, 88, 97)">
-                                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                                                <button type="submit" class="btn btn-success">Guardar</button>                
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                <span class="blue center"><h3>Resultados </h3></span>
+                <div class="box-body">
+                    <table id="tabla" class="table  table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; width: 10%">Expediente</th>
+                                <th style="text-align: center; width: 50%">Nombres y Apellidos</th>
+                                <th style="text-align: center; width: 10%">N° de Carnet</th>
+                                <th style="text-align: center; width: 10%">Edad</th>
+                                <th style="text-align: center; width: 10%">Opción</th>                           
+                            </tr>
+                        </thead>               
+                            <tbody>
+                                @foreach ($datos as $paciente)
+                                    <tr>
+                                        <td style="text-align: center;">{{$num=MyHelper::num_expediente($paciente->id)}}</td>
+                                        <td style="text-align: center;">{{$paciente->nombre}} {{$paciente->apellido_p}} {{$paciente->apellido_m}}</td>
+                                        <td style="text-align: center;">{{$paciente->ci}}</td>
+                                        <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($paciente->fecha_nac,"index")}}</td>
+                                        <td style="text-align: center;">
+                                            <div class="hidden-sm hidden-xs btn-group"> 
+                                                @if(Auth::user()->rol->añadir == 1)      
+                                                    <button  class="btn btn-xs btn-danger" onclick="location.href='{{route('registrar_ficha', ['id' => $paciente->id])}}'" title="Registrar Ficha">
+                                                        <i class="fa fa-book bigger-120"></i>
+                                                    </button> 
+                                                @endif 
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                </table>
-            </div>          
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                    </table>
+                </div>
+            @endif
+                
+                     
         @else
             <div class="box-body">
                 @php
@@ -141,7 +142,7 @@
                             <i class="fa fa-calendar bigger-120"> ver fecha</i>
                         </button>
                         @if($aux!=$fecha_actual)
-                            <button  class="btn btn-xs btn-primary pull-right"  title="volver" onclick="location.href='{{route('crear_ficha', ['id' => $servicio->id])}}'">
+                            <button  class="btn btn-xs btn-primary pull-right"  title="volver" onclick="location.href='{{route('consulta')}}'">
                                 <i class="fa fa-fw fa-reply-all bigger-120"></i>
                             </button>
                         @endif       
@@ -175,8 +176,8 @@
                 <table id="tabla" class="table  table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th style="text-align: center; width: 10%">Expediente</th>
-                            <th style="text-align: center; width: 38%">Nombres y Apellidos</th>
+                            <th style="text-align: center; width: 12%">Expediente</th>
+                            <th style="text-align: center; width: 36%">Nombres y Apellidos</th>
                             <th style="text-align: center; width: 17%">Edad</th>
                             <th style="text-align: center; width: 10%">hora</th>  
                             <th style="text-align: center; width: 10%">Estado</th>
@@ -186,7 +187,7 @@
                     <tbody>
                         @foreach ($fichas as $ficha)
                             <tr>
-                                <td style="text-align: center;">00{{$ficha->paciente->id}}</td>
+                                <td style="text-align: center;">{{$num=MyHelper::num_expediente($ficha->paciente->id)}}</td>
                                 <td style="text-align: center;">{{$ficha->paciente->nombre}} {{$ficha->paciente->apellido_p}} {{$ficha->paciente->apellido_m}}</td>
                                 <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($ficha->paciente->fecha_nac,"index")}}</td>
                                 <td style="text-align: center;">
@@ -200,42 +201,21 @@
                                     @if($ficha->estado==0)
                                         <span class="label label-lg label-danger arrowed-in arrowed-in-right">En Espera</span>               
                                     @else
-                                        <span class="label label-lg label-success arrowed-in arrowed-in-right">Atendido</span>
+                                        @if($ficha->estado==2)
+                                            <span class="label label-lg label-danger arrowed-in arrowed-in-right">Faltó</span>               
+                                        @else
+                                            <span class="label label-lg label-success arrowed-in arrowed-in-right">Atendido</span>
+                                        @endif
                                     @endif
                                 </td>
                                 <td style="text-align: center;">
                                     @if(Auth::user()->rol->editar == 1)
                                         @if($ficha->estado==0)
-                                            <div class="hidden-sm hidden-xs btn-group">                                    
-                                                <button  class="btn btn-xs btn-warning" data-toggle="modal" data-target="#EditarFicha{{$ficha->id}}" title="registrar ficha">
+                                            <div class="hidden-sm hidden-xs btn-group">
+                                                <button class="btn btn-xs btn-warning" onclick="location.href='{{route('editar_ficha', ['id' => $ficha->id])}}'" title="Editar ficha" >
                                                     <i class="fa fa-wrench bigger-120"></i>
-                                                </button>
-                                                <div class="modal modal-info fade in" id="EditarFicha{{$ficha->id}}" tabindex="-1">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content" style="background: rgb(185, 185, 185)">
-                                                            <div class="modal-header " style="background: rgb(95, 95, 104)">
-                                                                <button type="button" class="white close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                                <h4 class="white modal-title" style="text-align: center"><b>Editar Ficha</b></h4>
-                                                            </div>
-                                                            <form class="form-horizontal" action="{{route('actualizar_ficha', ['id' => $ficha->id])}}" id="form-general" method="POST">
-                                                                @csrf @method("put")
-                                                                <div class="modal-body">
-                                                                    @php
-                                                                        $paciente=MyHelper::Datos_Paciente($ficha->paciente_id);
-                                                                        $servicio=MyHelper::Datos_Servicio($ficha->servicio_id);
-                                                                    @endphp
-                                                                    @include('admin.ficha.form')
-                                                                
-                                                                </div>
-                                                                <div class="modal-footer" style="background: rgb(88, 88, 97)">
-                                                                    @include('botones.actualizar')
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                </button>                                    
+                                                
                                             </div>
                                         @endif
                                     @endif
@@ -269,20 +249,15 @@
                                             </form>
                                         </div>
                                     @else
-                                        {{-- <div class="hidden-sm hidden-xs btn-group">  
-                                            <form action="{{route('imprimir_consulta', ['id' => $ficha->id])}}" target="{{$ficha->id}}">
-                                                <button class="btn btn-success btn-xs tooltipsC" type="submit" title="ver consulta">
-                                                    <i class="fa fa-file-pdf-o"></i>
-                                                </button>
-                                            </form>
-                                        </div> --}}
-                                        <div class="hidden-sm hidden-xs btn-group">  
-                                            <form action="{{route('crear_consulta', ['id' => $ficha->id])}}" class="d-inline">
-                                                <button type="submit" class="btn btn-inverse btn-xs tooltipsC" title="pasar a consulta">
-                                                    <i class="fa fa-stethoscope"></i>
-                                                </button>
-                                            </form>
-                                        </div>
+                                        @if($ficha->estado==1)
+                                            <div class="hidden-sm hidden-xs btn-group">  
+                                                <form action="{{route('crear_consulta', ['id' => $ficha->id])}}" class="d-inline">
+                                                    <button type="submit" class="btn btn-inverse btn-xs tooltipsC" title="pasar a consulta">
+                                                        <i class="fa fa-stethoscope"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>

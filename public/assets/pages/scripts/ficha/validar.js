@@ -20,3 +20,5 @@ var fechalimite=aux+"-"+m+"-"+d;
     $('#ver_fecha').flatpickr({
         dateFormat: "Y-m-d",
     });
+
+

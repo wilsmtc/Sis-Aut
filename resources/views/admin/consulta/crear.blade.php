@@ -16,6 +16,7 @@ Consulta
       <h1>
          Atención Medica
          <button class="btn btn-pink pull-right" onclick="location.href='{{route('terminar_consulta', ['id' => $ficha->id])}}'"><i class="fa fa-save"> Terminar Consulta</i></button>
+         <button class="btn btn-inverse pull-right" onclick="location.href='{{route('crear_internacion', ['id' => $ficha->id])}}'"><i class="fa fa-bed"> Pasar a Internación</i></button>
       </h1>
       
     </div>
@@ -69,9 +70,12 @@ Consulta
         <div class="col-xs-12 col-sm-6">
             <div class="">
                 <div class="center">
+                  @if ($SVM==null)
                     <span class="center blue">Ultimos Signos Vitales</span>
-                </div>
-                
+                  @else
+                    <span class="center blue">Ultimos Signos Vitales ({{$aux_fecha}})</span>
+                  @endif
+                </div>   
                 <table id="tabla" class="table  table-bordered table-hover" >
                     <tr style="background: rgb(237, 243, 247)">
                         <th style="text-align: center; width: 14%"><i class="glyphicon glyphicon-arrow-up" style="color: darkviolet"></i><br> Altura</th>

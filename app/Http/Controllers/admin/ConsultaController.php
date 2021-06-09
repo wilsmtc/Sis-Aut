@@ -26,7 +26,10 @@ class ConsultaController extends Controller
             $seleccion=$request->seleccion;          
             $query= trim($request->get('search'));
             $search=$query;         
-            $datos=Paciente::where($seleccion, 'LIKE', '%'. $query . '%')->get();
+            $datos=Paciente::where([
+                ['estado',1],
+                [$seleccion, 'LIKE', '%'. $query . '%'],
+            ])->get();
             return view('admin.consulta.index', compact('servicio','search','datos')); 
         }
         else{
@@ -43,10 +46,27 @@ class ConsultaController extends Controller
             }
             else{
                 $fecha_actual=$request->ver_fecha;
+                //Calculo de estado 2
+                $fichas_cero= Ficha::where([
+                    ['servicio_id',1],
+                    ['fecha',$fecha_actual],
+                    ['estado', 0]
+                ])->get();
+                $fecha_act = new \DateTime();
+                $fecha_act=$fecha_act->format('Y-m-d');
+                foreach($fichas_cero as $F_C){
+                    if ($F_C->fecha<$fecha_act) {
+                        Ficha::findOrFail($F_C->id)->update([
+                            'estado'=>2
+                        ]);
+                    }
+                }
+                //Fin del calculo de estado 2
                 $fichas = Ficha::where([
                     ['servicio_id',1],
                     ['fecha',$fecha_actual],
-                    ])->orderBy('id','desc')->get();
+                ])->orderBy('id','desc')->get();
+                
                 return view('admin.consulta.index', compact('servicio','search','datos','fichas','fecha_actual'));
             }         
         }
@@ -57,8 +77,17 @@ class ConsultaController extends Controller
         $ficha=Ficha::findOrFail($id);
         $paciente=Paciente::findOrFail($ficha->paciente_id);
         $aux1=consulta::where('ficha_id',$ficha->id)->get();
-        $signos=Signos_vitales::where('paciente_id',$paciente->id)->get();   
-        $SVM=$signos->max(); 
+        $signos=Signos_vitales::where([
+            ['estado',1],
+            ['paciente_id',$paciente->id]
+        ])->get();      
+        $SVM=$signos->max();
+        $aux_fecha="";
+        if ($SVM!=null) {
+            $aux_consulta=Consulta::findOrFail($SVM->consulta_id);
+            $aux_ficha=Ficha::findOrFail($aux_consulta->ficha_id);
+            $aux_fecha=$aux_ficha->fecha;
+        }       
         if(session()->get('usuario_personal_id')==null){
             $doctor="Dr. ".session()->get('nombre_usuario')." ".session()->get('apellido_usuario');
         }
@@ -73,8 +102,8 @@ class ConsultaController extends Controller
         if($aux1->count()==0){
             $consulta= Consulta::create([
                 'ficha_id'=>$ficha->id, 
-                'motivo'=>'-->',
-                'diagnostico'=>'-->',
+                'motivo'=>'>',
+                'diagnostico'=>'>',
                 'doctor'=>$doctor,
             ]);
             $signos_vitales= Signos_vitales::create([
@@ -108,7 +137,7 @@ class ConsultaController extends Controller
         }
         
         //dd($consulta[0]["id"]);
-        return view('admin.consulta.crear', compact('paciente','ficha','consulta','signos_vitales','historial','aux3','SVM','gabinete')); 
+        return view('admin.consulta.crear', compact('paciente','ficha','consulta','signos_vitales','historial','aux3','SVM','gabinete','aux_fecha')); 
         
     }
 
@@ -246,6 +275,14 @@ class ConsultaController extends Controller
         Ficha::findOrFail($id)->update([
             'estado'=>1        
         ]);
+        $consulta_vector=Consulta::where('ficha_id',$id)->get();
+        //dd($consulta_vector[0]["id"]);
+        $consulta=Consulta::findOrFail($consulta_vector[0]["id"]);
+        //dd($consulta->id);
+        $signos_vitales_vector=Signos_vitales::where('consulta_id',$consulta->id)->get();
+        Signos_vitales::findOrFail($signos_vitales_vector[0]["id"])->update([
+            'estado'=>1 
+        ]);
         return redirect('admin/ficha/consulta')->with('mensaje', 'Consulta finalizada correctamente');
     }
 
@@ -303,6 +340,25 @@ class ConsultaController extends Controller
         else
             $image = base64_encode(file_get_contents(public_path("storage/datos/fotos/clinica/$clinica->logo")));
         $pdf=PDF::loadview('admin.consulta.imprimir_gabinete', compact('clinica','image','ficha','consulta','gabinete'));
+        return $pdf->stream('ficha.pdf');
+    }
+    public function imprimir_receta($id)//es ek ud de la consulta
+    {   
+        $consulta=Consulta::findOrFail($id);
+        $ficha=Ficha::findOrFail($consulta->ficha_id);
+        $clinica = Clinica::findOrFail(1);
+        $aux1=Receta::where('consulta_id',$consulta->id)->get();
+        if ($aux1->count()==0) {
+            $receta=null;
+        } else {
+            $receta=Receta::findOrFail($aux1[0]["id"]);
+        }
+        
+        if($clinica->logo==null)
+            $image = base64_encode(file_get_contents(public_path("assets/lte/assets/images/gallery/bayern.png")));
+        else
+            $image = base64_encode(file_get_contents(public_path("storage/datos/fotos/clinica/$clinica->logo")));
+        $pdf=PDF::loadview('admin.consulta.imprimir_receta', compact('clinica','image','ficha','consulta','receta'));
         return $pdf->stream('ficha.pdf');
     }
 }
