@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+use PhpParser\Node\Expr\Cast\Array_;
 
 class UsuarioAdministradorSeeder extends Seeder
 {
@@ -384,10 +385,16 @@ class UsuarioAdministradorSeeder extends Seeder
             'nombre'=>'Enfermeria',
             'descripcion'=>'Fomentar el cuidado integral al individuo, familia y comunidad, aplicando el Proceso de Atención de Enfermería a nivel de promoción, prevención, recuperación y rehabilitación.'
         ]);
+        $cama=array();
+        for($i=0;$i<3;$i++){
+            $cama[$i]['orden']=$i+1;
+            $cama[$i]["estado"]='libre';
+        }
+        $cama=json_encode($cama);
         DB::table('servicio')->insert([
             'nombre'=>'Internaciones',
             'descripcion'=>'La sala de corta estancia ofrece el servicio en un ambiente agradable, con infraestructura acorde a la complejidad del problema, también brinda al usuario atención y prevención.',
-            'cama'=>'[{"estado":"0"},{"estado":"0"},{"estado":"0"}]'
+            'cama'=>$cama
         ]);
         DB::table('servicio')->insert([
             'nombre'=>'Ginecologia',

@@ -8,6 +8,7 @@ use App\Models\Admin\Consulta;
 use App\Models\Admin\Ficha;
 use App\Models\Admin\Historial;
 use App\Models\Admin\Internacion;
+use App\Models\Admin\Servicio;
 use App\Models\Admin\Signos_vitales;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
@@ -16,8 +17,15 @@ class InternacionController extends Controller
 {
     public function index()
     {
+        $servicio=Servicio::findOrFail(3);
+        $cama_cadena=$servicio->cama;
+        $cama_objeto=json_decode($cama_cadena);
+        $valor=0;
+        foreach($cama_objeto as $dato){
+            $valor++;
+        }
         $datos = Internacion::where('estado',0)->orderBy('id')->get();
-        return view('admin.internacion.index',compact('datos'));
+        return view('admin.internacion.index',compact('datos','valor','cama_objeto'));
     }
 
     public function index_alta()
@@ -28,6 +36,20 @@ class InternacionController extends Controller
 
     public function create($id)
     {   
+        $servicio=Servicio::findOrFail(3);
+        $cama_cadena=$servicio->cama;
+        $camas=json_decode($cama_cadena);
+        $datos=array();
+        $i=0;
+        foreach($camas as $cama){
+            if($cama->estado=="libre"){
+                $datos[$i]['orden']=$cama->orden;
+                $datos[$i]['estado']=$cama->estado;    
+            }
+            $i++;
+        }
+        $datos=json_encode($datos);
+        $datos=json_decode($datos);
         Ficha::findOrFail($id)->update([
             'estado'=>1        
         ]);
@@ -48,17 +70,30 @@ class InternacionController extends Controller
             $historial=Historial::findOrFail($historial[0]["id"]);
             $sangre=$historial->t_sangre;
         }   
-        return view('admin.internacion.crear',compact('ficha','consulta','sangre','SVM'));
+        return view('admin.internacion.crear',compact('ficha','consulta','sangre','SVM','datos'));
     }
 
     public function store(Request $request)
-    {
+    {   
+        $num_cama=$request->cama;
+        $servicio=Servicio::findOrFail(3);
+        $cama_cadena=$servicio->cama;
+        $cama_objeto=json_decode($cama_cadena);
+        $cama_objeto[$num_cama-1]->estado='ocupado';
+        $cama_cadena=json_encode($cama_objeto);
+        $servicio->update([
+            'cama'=>  $cama_cadena     
+        ]);
+
         Internacion::create($request->all());
         return redirect('admin/internacion')->with('mensaje','Datos Registrados correctamente');
     }
 
     public function edit($id)
-    {
+    {     
+        Ficha::findOrFail($id)->update([
+            'estado'=>1        
+        ]);
         $dato = Internacion::findOrfail($id);
         $consulta=Consulta::findOrFail($dato->consulta_id);
         $ficha=Ficha::findOrFail($consulta->ficha_id);
@@ -71,11 +106,37 @@ class InternacionController extends Controller
             $historial=Historial::findOrFail($historial[0]["id"]);
             $sangre=$historial->t_sangre;
         }
-        return view('admin.internacion.editar', compact('dato','consulta','ficha','SVM','sangre'));
+
+        $servicio=Servicio::findOrFail(3);
+        $cama_cadena=$servicio->cama;
+        $camas=json_decode($cama_cadena);
+        $datos=array();
+        $i=0;
+        foreach($camas as $cama){
+            if($cama->estado=="libre"||$cama->orden==$dato->cama){
+                $datos[$i]['orden']=$cama->orden;
+                $datos[$i]['estado']=$cama->estado;    
+            }
+            $i++;
+        }
+        $datos=json_encode($datos);
+        $datos=json_decode($datos);
+        return view('admin.internacion.editar', compact('dato','consulta','ficha','SVM','sangre','datos'));
     }
 
     public function update(Request $request, $id)
-    {
+    {   $dato = Internacion::findOrfail($id);
+        if($dato->cama!=$request->cama){
+            $servicio=Servicio::findOrFail(3);
+            $cama_cadena=$servicio->cama;
+            $cama_objeto=json_decode($cama_cadena);
+            $cama_objeto[$dato->cama-1]->estado='libre';
+            $cama_objeto[$request->cama-1]->estado='ocupado';
+            $cama_cadena=json_encode($cama_objeto);
+            $servicio->update([
+                'cama'=>  $cama_cadena     
+            ]);
+        }
         Internacion::findOrFail($id)->update($request->all());
         return redirect('admin/internacion')->with('mensaje', 'Datos actualizados con exito');
     }
@@ -123,8 +184,18 @@ class InternacionController extends Controller
             $fotos_cadena=json_encode($fotos);
             $request->request->add(['foto_evolucion' => $fotos_cadena]);  
         }
+        $dato=Internacion::findOrFail($id);
+        $servicio=Servicio::findOrFail(3);
+            $cama_cadena=$servicio->cama;
+            $cama_objeto=json_decode($cama_cadena);
+            $cama_objeto[$dato->cama-1]->estado='libre';
+            $cama_cadena=json_encode($cama_objeto);
+            $servicio->update([
+                'cama'=>  $cama_cadena     
+            ]);
         $request->request->add(['estado' =>1]);
         Internacion::findOrFail($id)->update($request->all());
+
         return redirect('admin/internacion_alta')->with('mensaje', 'Registro guardado con exito');
     }
     public function imprimir_forzoso($id)//es ek ud de la internacion
@@ -161,5 +232,62 @@ class InternacionController extends Controller
             
         $pdf=PDF::loadview('admin.internacion.imprimir_todo', compact('clinica','image','internacion','signos_vitales','fotos'));
         return $pdf->stream('ficha.pdf');
+    }
+
+    public function num_camas($aux)
+    {   
+        $servicio=Servicio::findOrFail(3);
+            $cama_cadena=$servicio->cama;
+            $cama_objeto=json_decode($cama_cadena);
+            $valor=0;
+            foreach($cama_objeto as $dato){
+                $valor++;
+            }
+        if ($aux=="mas") {
+            $cama_objeto[$valor]["orden"]=$valor+1;
+            $cama_objeto[$valor]['estado']='libre';
+            $cama_cadena=json_encode($cama_objeto);
+            $servicio->update([
+                'cama'=>  $cama_cadena      
+            ]);
+            return redirect('admin/internacion');
+        } 
+        else {
+            if($valor==0)
+                return redirect('admin/internacion')->with('mensajeerror', 'todas las camas ya han sido eliminados');
+            else{
+                if($dato->estado!='ocupado'){
+                    $cama=array();
+                    $i=0;
+                    foreach($cama_objeto as $dato){
+                        if($i<$valor-1){
+                            $cama[$i]["orden"]=$dato->orden;
+                            $cama[$i]["estado"]=$dato->estado; 
+                        }                           
+                        $i++;
+                    }
+                    $cama_cadena=json_encode($cama);
+                    $servicio->update([
+                        'cama'=>  $cama      
+                    ]);
+                    return redirect('admin/internacion');
+                }
+                else{
+                    return redirect('admin/internacion')->with('mensajeerror', 'esa cama aun esta ocupada');  
+                }    
+            }                   
+        }
+    }
+    public function mantenimiento_cama($id,$estado)
+    {
+        $servicio=Servicio::findOrFail(3);
+        $cama_cadena=$servicio->cama;
+        $cama_objeto=json_decode($cama_cadena);
+        $cama_objeto[$id-1]->estado=$estado;
+        $cadena=json_encode($cama_objeto);
+        $servicio->update([
+            'cama'=>  $cadena     
+        ]);
+        return redirect('admin/internacion');
     }
 }

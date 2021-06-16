@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Servicio extends Model
 {
     protected $table = "servicio";
-    protected $fillable=['nombre','descripcion','foto'];
+    protected $fillable=['nombre','descripcion','foto','cama'];
 
     public static function setFoto($foto, $actual = false) //foto (al crear), actual (al editar)
     {

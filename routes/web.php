@@ -153,6 +153,8 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
     Route::get('internacion_alta', 'InternacionController@index_alta') ->name('internacion_alta');
     Route::get('internacion/{id}/retiro_forzado', 'InternacionController@imprimir_forzoso') ->name('retiro_forzoso');
     Route::get('internacion/{id}/imprimir_internacion', 'InternacionController@imprimir_todo') ->name('imprimir_todo');
+    Route::get('internacion/{dato}/num_camas', 'InternacionController@num_camas') ->name('num_camas');
+    Route::get('internacion/{id}/{estado}/mantenimiento', 'InternacionController@mantenimiento_cama') ->name('mantenimiento_cama')->middleware('permisoeditar');
 
 
 });

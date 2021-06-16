@@ -5,6 +5,8 @@
 @section("scripts")
     <script src="{{asset("assets/pages/scripts/alert/alert.js")}}" type="text/javascript"></script>
     <script src="{{asset("assets/pages/scripts/datatables/datatables.js")}}" type="text/javascript"></script>
+    <script src="{{asset("assets/pages/scripts/internacion/camas.js")}}" type="text/javascript"></script>
+
 @endsection
 @section('contenido')
 <div class="page-header">
@@ -16,6 +18,69 @@
             </a>
         </div>
     </h1>
+</div>
+<div class="row center">
+    <div class="hidden-sm hidden-xs btn-group">  
+        <button type="button" onclick="location.href='{{route('num_camas', ['dato' => 'mas'])}}'" class="btn btn-xs btn-success" id="btn_mas"><i class="fa fa-fw fa-plus"></i></button>
+    </div>
+    
+    <div class="hidden-sm hidden-xs btn-group">
+        <span class="blue"><h3>{{$valor}}</h3> </span>
+    </div>
+    <div class="hidden-sm hidden-xs btn-group">
+        <button type="button" onclick="location.href='{{route('num_camas', ['dato' => 'menos'])}}'"class="btn btn-xs btn-danger" id="btn_menos"><i class="fa fa-fw fa-minus"></i></button>
+    </div>
+</div>
+<div class="row">
+    @foreach ($cama_objeto as $cama)
+        @if($cama->estado=='libre')
+            <div class="col-lg-3" >
+                <div class="infobox infobox-green infobox-dark center">
+                    <div class="infobox-icon">
+                        <i class="ace-icon fa fa-bed zoom "></i>
+                    </div>
+                    <div class="infobox-data center">
+                        <span class="infobox-data-number">{{$cama->orden}}</span>
+                        <h4><div class="infobox-content">{{$cama->estado}}</div></h4> 
+                    </div>
+                    <div class="badge badge-danger">
+                            <a href="{{route('mantenimiento_cama', ['id' => $cama->orden, 'estado'=>'mantenimiento'])}}" class="white">M</a>           
+                    </div>
+                </div>
+            </div> 
+        @else
+            @if ($cama->estado=='mantenimiento')
+                <div class="col-lg-3" >
+                    <div class="infobox infobox-orange infobox-dark center">
+                        <div class="infobox-icon">
+                            <i class="ace-icon fa fa-bed zoom "></i>
+                        </div>
+                        <div class="infobox-data center">
+                            <span class="infobox-data-number">{{$cama->orden}}</span>
+                            <h4><div class="infobox-content">{{$cama->estado}}</div></h4> 
+                        </div>
+                        <div class="badge badge-danger">
+                            <a href="{{route('mantenimiento_cama', ['id' => $cama->orden, 'estado'=>'libre'])}}" class="white"><i class="fa fa-check"></i></a>           
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="col-lg-3" >
+                    <div class="infobox infobox-red infobox-dark center">
+                        <div class="infobox-icon">
+                            <i class="ace-icon fa fa-bed zoom "></i>
+                        </div>
+                        <div class="infobox-data center">
+                            <span class="infobox-data-number">{{$cama->orden}}</span>
+                            <h4><div class="infobox-content">{{$cama->estado}}</div></h4> 
+                        </div>
+                    </div>
+                </div>    
+            @endif
+            
+        @endif   
+    @endforeach
+    
 </div>
 <div class="row">
     <div class="col-xs-12">

@@ -102,14 +102,11 @@
             <div class="col-lg-7">
                 <select name="cama" id="cama" class="form-control" required >
                     <option value="">Seleccione una Opción</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    {{-- @foreach($cargo as $id => $nombre)
+                    @foreach($datos as $cama)
                         <option
-                        value="{{$id}}"{{old("cama",$personal->cargo->id ?? "")==$id ? "selected":""}}>{{$nombre}}
+                            value="{{$cama->orden}}"{{old("cama",$dato->cama ?? "")==$cama->orden ? "selected":""}}>{{$cama->orden}}
                         </option>
-                    @endforeach --}}
+                    @endforeach
                 </select>
             </div>
             
@@ -124,7 +121,7 @@
         </div>
     </div>
 </div>
-<div id="div_internacion" style="display: none">
+<div id="div_internacion" style="display: block">
     <h4 class="blue"><i>Datos de la Internación</i> </h4>
     <table width="100%" class="table  table-bordered table-hover">
         <tr class="blue">
@@ -133,7 +130,7 @@
         </tr>
         <tr class="center">
             <td>
-                <textarea class="form-control" placeholder="" id="motivo_i" name="motivo_i" rows="3" maxlength="500">{{old('motivo_i', $dato->motivo_i ?? 'S/P')}}</textarea>
+                <textarea class="form-control" placeholder="" id="motivo_i" name="motivo_i" rows="3" maxlength="500" required>{{old('motivo_i', $dato->motivo_i ?? 'S/P')}} </textarea>
             </td>
             <td>
                 <textarea class="form-control" placeholder="" id="e_fisico" name="e_fisico" rows="3" maxlength="500">{{old('e_fisico', $dato->e_fisico ?? 'S/P')}}</textarea>
