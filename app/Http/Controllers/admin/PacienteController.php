@@ -9,6 +9,7 @@ use App\Models\Admin\Consulta;
 use App\Models\Admin\Ficha;
 use App\Models\Admin\Gabinete;
 use App\Models\Admin\Historial;
+use App\Models\Admin\Internacion;
 use App\Models\Admin\Paciente;
 use App\Models\Admin\Receta;
 use App\Models\Admin\Signos_vitales;
@@ -29,11 +30,12 @@ class PacienteController extends Controller
             ])->paginate(100);
             $contador=$datos->count();
             $columna=0;
+            $search=$query;
             if($contador==0)
-                return back()->with('mensajeerror','No se encontro resultados para tu busqueda');
+                return view('admin.paciente.index',compact('datos','search','columna','seleccion'));
                 //return view('admin.paciente.index',['datos'=>$datos,'search'=>$query,'columna'=>$columna,'seleccion'=>$seleccion])->with('mensajeerror','No se encontró resultados para su busqueda');
             else
-                return view('admin.paciente.index',['datos'=>$datos,'search'=>$query,'columna'=>$columna,'seleccion'=>$seleccion]);
+                return view('admin.paciente.index',compact('datos','search','columna','seleccion'));
         }
         else{
             $datos = Paciente::where('estado',1)->orderBy('id','desc')->paginate(10);
@@ -131,7 +133,14 @@ class PacienteController extends Controller
             }              
             else{
                 $datos[$j]["gabinete_id"]='no';
-            }             
+            }
+            $aux3=Internacion::where('consulta_id',$consulta[0]["id"])->get();  
+            if($aux3->count()>0){
+                $datos[$j]["internacion_id"]=$aux3[0]["id"];
+            }              
+            else{
+                $datos[$j]["internacion_id"]='no';
+            }          
             $j++;
         }
         //dd($datos); 
@@ -218,12 +227,25 @@ class PacienteController extends Controller
         } else {
             $gabinete=Gabinete::findOrFail($aux2[0]["id"]);
         }
+        $aux3=Internacion::where('consulta_id',$consulta->id)->get();
+        if ($aux3->count()==0) {
+            $internacion=null;
+            $fotos=null;
+        } else {
+            $internacion=Internacion::findOrFail($aux3[0]["id"]);
+            if ($internacion->foto_evolucion==null) {
+                $fotos=null;
+            } else {
+                $fotos=$internacion->foto_evolucion;
+                $fotos=json_decode($fotos);
+            }
+        }
         
         if($clinica->logo==null)
             $image = base64_encode(file_get_contents(public_path("assets/lte/assets/images/gallery/bayern.png")));
         else
             $image = base64_encode(file_get_contents(public_path("storage/datos/fotos/clinica/$clinica->logo")));
-        $pdf=PDF::loadview('admin.paciente.imprimir_consulta', compact('clinica','image','ficha','consulta','signos_vitales','receta','gabinete'));
+        $pdf=PDF::loadview('admin.paciente.imprimir_consulta', compact('clinica','image','ficha','consulta','signos_vitales','receta','gabinete','internacion','fotos'));
         return $pdf->stream('ficha.pdf');
     }
 
@@ -286,7 +308,35 @@ class PacienteController extends Controller
             }              
             else{
                 $datos[$j]["gabinete_id"]='no';
-            }             
+            } 
+
+            $aux3=Internacion::where('consulta_id',$consulta[0]["id"])->get();
+            if($aux3->count()>0){
+                $datos[$j]["internacion_id"]=$aux3[0]["id"];
+                $datos[$j]["cama"]=$aux3[0]["cama"];
+                $datos[$j]["fecha_ingreso"]=$aux3[0]["fecha_ingreso"];
+                $datos[$j]["contacto_emergencia"]=$aux3[0]["contacto_emergencia"];
+                $datos[$j]["motivo_i"]=$aux3[0]["motivo_i"];
+                $datos[$j]["e_fisico"]=$aux3[0]["e_fisico"];
+                $datos[$j]["craneo_cara"]=$aux3[0]["craneo_cara"];
+                $datos[$j]["cuello_tiroides"]=$aux3[0]["cuello_tiroides"];
+                $datos[$j]["torax"]=$aux3[0]["torax"];
+                $datos[$j]["genitales"]=$aux3[0]["genitales"];
+                $datos[$j]["columna"]=$aux3[0]["columna"];
+                $datos[$j]["e_neurologico"]=$aux3[0]["e_neurologico"];
+                $datos[$j]["impresion_d"]=$aux3[0]["impresion_d"];
+                $datos[$j]["conducta"]=$aux3[0]["conducta"];
+                $datos[$j]["fecha_salida"]=$aux3[0]["fecha_salida"];
+                $datos[$j]["diagnostico_salida"]=$aux3[0]["diagnostico_salida"];
+                $datos[$j]["tratamiento_realizado"]=$aux3[0]["tratamiento_realizado"];
+                $datos[$j]["nombre_resp"]=$aux3[0]["nombre_resp"];
+                $datos[$j]["ci_resp"]=$aux3[0]["ci_resp"];
+                $datos[$j]["testigo"]=$aux3[0]["testigo"];
+                $datos[$j]["foto_evolucion"]=$aux3[0]["foto_evolucion"];
+            }              
+            else{
+                $datos[$j]["internacion_id"]='no';
+            }            
             $j++;
         }
         //dd($datos); 

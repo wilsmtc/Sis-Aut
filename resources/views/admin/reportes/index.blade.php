@@ -23,6 +23,7 @@
                         <option value="">Seleccione su Opción</option>
                         <option value="paciente" {{old("informe",$historial->informe?? "")=="paciente" ? "selected":""}}>Paciente</option>
                         <option value="consulta" {{old("informe",$historial->informe?? "")=="consulta" ? "selected":""}}>Consulta</option>
+                        <option value="internacion" {{old("informe",$historial->informe?? "")=="internacion" ? "selected":""}}>Internación</option>
                         <option value="enfermeria" {{old("informe",$historial->informe?? "")=="enfermeria" ? "selected":""}}>Enfermeria</option>
                     </select>
                 </div>
@@ -49,6 +50,16 @@
                     </select>
                 </div>
             </div> 
+            <div class="form-group" id="div_t_internacion" style="display: none">
+                <label class="col-sm-4 control-label no-padding-right requerido" for="form-field-1">Tipo de Informe</label>
+                <div class="col-lg-3">
+                    <select name="t_internacion" id="t_internacion" class="form-control">
+                        <option value="">Seleccione su Opción</option>
+                        <option value="activos" {{old("t_internacion",$historial->t_internacion?? "")=="ativos" ? "selected":""}}>Internos Actuales</option>
+                        <option value="alta" {{old("t_internacion",$historial->t_internacion?? "")=="alta" ? "selected":""}}>Internos dados de Alta</option>
+                    </select>
+                </div>
+            </div>
             <div class="form-group" id="div_t_enfermeria" style="display: none">
                 <label class="col-sm-4 control-label no-padding-right requerido" for="form-field-1">Tipo de atención</label>
                 <div class="col-lg-3">

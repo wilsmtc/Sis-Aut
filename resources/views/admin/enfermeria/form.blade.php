@@ -3,29 +3,30 @@
     $aux=$aux->format('Y-m-d');
 @endphp
 <input type="hidden" id="fecha" name="fecha" value="{{$aux}}">
+<input type="hidden" id="paciente_id" name="paciente_id" value="{{$paciente->id}}">
 <div class="col-xs-12 col-sm-6 center">
     <div class="form-group">
-        <label class="col-sm-4 control-label no-padding-right requerido" for="form-field-1"> Nombre </label>
-        <div class="col-sm-7">
-            <input type="text" class="form-control" minlength="3" maxlength="50" placeholder="Ingrese Nombre"  id="nombre" name="nombre" value="{{old('nombre', $data->nombre ?? '')}}" required onkeyup="NombreMayus()"/>
+        <label class="blue col-sm-4 control-label no-padding-right " for="form-field-1"><i> Nombre</i></label>
+        <div class="col-sm-6 pull-right">
+            <span class="pull-left">{{$paciente->nombre}}</span>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-4 control-label no-padding-right requerido" for="form-field-1"> Apellido </label>
-        <div class="col-sm-7">
-            <input type="text" class="form-control" minlength="2" maxlength="50" placeholder="Ingrese Apellido"  id="apellido" name="apellido" value="{{old('apellido', $data->apellido ?? '')}}" required onkeyup="ApellidoMayus()"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-sm-4 control-label no-padding-right requerido" for="form-field-1">Fecha de Nacimiento</label>
-        <div class="col-sm-7">
-            <input type="date" min="1920-01-01" name="fecha_nac" id="fecha_nac" class="form-control" value="{{old('fecha_nac', $data->fecha_nac ?? '')}}" required placeholder="fecha de Nacimiento"/>
+        <label class="blue col-sm-4 control-label no-padding-right " for="form-field-1"><i> Apellidos </i></label>
+        <div class="col-sm-6 pull-right">
+            <span class="pull-left">{{$paciente->apellido_p}} {{$paciente->apellido_m}}</span>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-4 control-label no-padding-right" for="form-field-1"> Dr. o lugar previo </label>
+        <label class="blue col-sm-4 control-label no-padding-right " for="form-field-1"><i> Edad</i></label>
+        <div class="col-sm-6 pull-right">
+            <span class="pull-left">{{$edad=MyHelper::Edad_Paciente($paciente->fecha_nac,"completo")}}</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="blue col-sm-4 control-label no-padding-right" for="form-field-1"> Dr. o lugar previo </label>
         <div class="col-sm-7">
             <input type="text" class="form-control" minlength="3" maxlength="50" placeholder="Dr o el lugar en el que fue atendido"  id="previo" name="previo" value="{{old('previo', $data->previo ?? '')}}" onkeyup="PrevioMayus()"/>
         </div>

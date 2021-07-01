@@ -17,18 +17,71 @@ class FichaController extends Controller
 
     public function index(Request $request)
     {      
-        $servicios=Servicio::orderBy('id')->get();                        
-        if($request->ver_fecha==null){
-            $fecha_actual = new \DateTime();
-            $fecha_actual=$fecha_actual->format('Y-m-d');                           
-            $datos = Ficha::where('fecha',$fecha_actual)->orderBy('id','desc')->get();
-            return view('admin.ficha.index',compact('datos','servicios','fecha_actual')); 
+        // $servicios=Servicio::orderBy('id')->get();                        
+        // if($request->ver_fecha==null){
+        //     $fecha_actual = new \DateTime();
+        //     $fecha_actual=$fecha_actual->format('Y-m-d');                           
+        //     $datos = Ficha::where('fecha',$fecha_actual)->orderBy('id','desc')->get();
+        //     return view('admin.ficha.index',compact('datos','servicios','fecha_actual')); 
+        // }
+        // else{
+        //     $fecha_actual=$request->ver_fecha;
+        //     $datos = Ficha::where('fecha',$fecha_actual)->orderBy('id','desc')->get();
+        //     return view('admin.ficha.index',compact('datos','servicios','fecha_actual')); 
+        // }           
+    }
+
+    public function index_fichaje(Request $request)
+    {        
+        $servicio = Servicio::findOrFail(1);
+        if($request->search!=null){
+            $seleccion=$request->seleccion;          
+            $query= trim($request->get('search'));
+            $search=$query;         
+            $datos=Paciente::where([
+                ['estado',1],
+                [$seleccion, 'LIKE', '%'. $query . '%'],
+            ])->get();
+            return view('admin.ficha.index', compact('servicio','search','datos')); 
         }
         else{
-            $fecha_actual=$request->ver_fecha;
-            $datos = Ficha::where('fecha',$fecha_actual)->orderBy('id','desc')->get();
-            return view('admin.ficha.index',compact('datos','servicios','fecha_actual')); 
-        }           
+            $search=null;
+            $datos=null;
+            if($request->ver_fecha==null){
+                $fecha_actual = new \DateTime();
+                $fecha_actual=$fecha_actual->format('Y-m-d');
+                $fichas = Ficha::where([
+                ['servicio_id',1],
+                ['fecha',$fecha_actual],
+                ])->orderBy('id','desc')->get();
+                return view('admin.ficha.index', compact('servicio','search','datos','fichas','fecha_actual'));     
+            }
+            else{
+                $fecha_actual=$request->ver_fecha;
+                //Calculo de estado 2
+                $fichas_cero= Ficha::where([
+                    ['servicio_id',1],
+                    ['fecha',$fecha_actual],
+                    ['estado', 0]
+                ])->get();
+                $fecha_act = new \DateTime();
+                $fecha_act=$fecha_act->format('Y-m-d');
+                foreach($fichas_cero as $F_C){
+                    if ($F_C->fecha<$fecha_act) {
+                        Ficha::findOrFail($F_C->id)->update([
+                            'estado'=>2
+                        ]);
+                    }
+                }
+                //Fin del calculo de estado 2
+                $fichas = Ficha::where([
+                    ['servicio_id',1],
+                    ['fecha',$fecha_actual],
+                ])->orderBy('id','desc')->get();
+                
+                return view('admin.ficha.index', compact('servicio','search','datos','fichas','fecha_actual'));
+            }         
+        }       
     }
 
     public function create($id, Request $request)
@@ -81,7 +134,7 @@ class FichaController extends Controller
         $request->request->add(['turno' => $request->hora]);
         $request->request->add(['hora' => $hora]);
         Ficha::create($request->all());
-        return redirect("admin/ficha/consulta")->with('mensaje','Ficha creado con exito');
+        return redirect("admin/fichaje")->with('mensaje','Ficha creado con exito');
     }
 
 
@@ -122,10 +175,10 @@ class FichaController extends Controller
             $request->request->add(['turno' => $request->hora]);
             $request->request->add(['hora' => $hora]);
             Ficha::findOrFail($id)->update($request->all());
-            return redirect("admin/ficha/consulta")->with('mensaje','Ficha actualizada con exito');
+            return redirect("admin/fichaje")->with('mensaje','Ficha actualizada con exito');
         }
         else{
-            return redirect("admin/ficha/consulta")->with('mensaje','Ficha actualizada con exito');
+            return redirect("admin/fichaje")->with('mensaje','Ficha actualizada con exito');
         }
         // Ficha::findOrFail($id)->update($request->all());
         // return redirect("admin/ficha/consulta")->with('mensaje','Ficha actualizada con exito');

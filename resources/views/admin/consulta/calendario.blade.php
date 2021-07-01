@@ -26,7 +26,7 @@ Calendario
         @include('mensajes.incorrecto')
       <h4 class="center page-header"><b>Calendario de Consulta Externa</b>
         <div class="box-tools pull-right">
-          <a href="{{route('consulta')}}" class="btn btn-block btn-info btn-sm">
+          <a href="{{route('fichaje')}}" class="btn btn-block btn-info btn-sm">
               <i class="fa fa-fw fa-reply-all"></i> Volver
           </a>
         </div> 

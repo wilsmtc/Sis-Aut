@@ -64,15 +64,28 @@
                       
         </div>
         @if($search)
-            <div class="col-xs-12">                
-                <div class="alert alert-info">                    
-                    <i class="ace-icon fa fa-hand-o-right"></i>
-                    Los resultados de tu busqueda <b>'{{$search}}'</b> son:
-                    <a href="{{route('paciente')}}" class="ver-curriculum btn btn-primary btn-xs tooltipC pull-right" title="volver">
-                        <i class="fa fa-fw fa-reply-all"></i>																			
-                    </a>	
-                </div>
-            </div>
+            @if ($datos->count()==0)
+                <div class="col-xs-12">                
+                    <div class="alert alert-danger">                    
+                        <i class="ace-icon fa fa-hand-o-right"></i>
+                        No hay resultados para: <b>'{{$search}}'</b>
+                        <a href="{{route('paciente')}}" class="ver-curriculum btn btn-primary btn-xs tooltipC pull-right" title="volver">
+                            <i class="fa fa-fw fa-reply-all"></i>																			
+                        </a>	
+                    </div>
+                </div> 
+            @else
+                <div class="col-xs-12">                
+                    <div class="alert alert-info">                    
+                        <i class="ace-icon fa fa-hand-o-right"></i>
+                        Los resultados de tu busqueda <b>'{{$search}}'</b> son:
+                        <a href="{{route('paciente')}}" class="ver-curriculum btn btn-primary btn-xs tooltipC pull-right" title="volver">
+                            <i class="fa fa-fw fa-reply-all"></i>																			
+                        </a>	
+                    </div>
+                </div>    
+            @endif
+            
         @endif
 
 

@@ -1,6 +1,6 @@
 @extends("theme.$theme.layout")
 @section('titulo')
-    Crear Ficha
+    Consulta
 @endsection
 @section("scripts")
 <script src="{{asset("assets/pages/scripts/alert/alert.js")}}" type="text/javascript"></script>
@@ -20,13 +20,11 @@
 @section('contenido')
 <div class="page-header">
     <h1>
-        <small>
-            Registrar Ficha Para:          
-        </small>
+
         {{$servicio->nombre}}
-        <button class="btn btn-purple pull-right" onclick="location.href='{{route('calendario')}}'">
+        {{-- <button class="btn btn-purple pull-right" onclick="location.href='{{route('calendario')}}'">
             <i class="fa fa-calendar"> Agenda de Atención</i>
-        </button>
+        </button> --}}
     </h1>
 </div>
 <div class="row">
@@ -34,100 +32,8 @@
         @include('mensajes.correcto')
         @include('mensajes.error')
         @include('mensajes.incorrecto')
-        <div class="col-xs-12">
-            <form class="form-inline ml-3">
-                <div class="col-xs-3">               
-                    Buscar Por:     
-                    <select id="seleccion" name="seleccion" onChange=mostrar(this.value);>
-                        
-                        <option value="">Elija una Opción</option>
-                        <option value="apellido_p">Apellido Paterno</option>
-                        <option value="apellido_m">Apellido Materno</option>
-                        <option value="ci">N° de Carnet</option>
-                        <option value="id">N° de Expediente</option>
-                        <option value="celular">Telf/Cel</option>              
-                    </select>               
-                </div>
 
-                <div class="col-xs-4">
-                    <div id="buscar" style="display: none;">
-                        <div class="input-group">
-                            <input type="search" name="search" class="form-control" placeholder="Buscar..." aria-label="search" value="{{$search}}" autocomplete="off">						
-                            <span class="input-group-btn">							
-                                <button type="submit" class="btn btn-flat">                
-                                    <i class="fa fa-search"></i>
-                                </button>                  
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        @if($datos)
-            @if ($datos->count()==0)
-            <div class="col-xs-12">                
-                <div class="alert alert-danger">                    
-                    <i class="ace-icon fa fa-hand-o-right"></i>
-                    Busqueda sin resultados	
-                    <a href="{{route('consulta')}}" class="ver-curriculum btn btn-primary btn-xs tooltipC pull-right" title="volver">
-                        <i class="fa fa-fw fa-reply-all"></i>																			
-                    </a>
-                </div>
-            </div>
-            @if(Auth::user()->rol->añadir == 1)      
-                <div class="box-tools">
-                    <a href="{{route('crear_paciente')}}" class="btn btn-block btn-success btn-xl">
-                        <i class="fa fa-fw fa-plus-circle"></i> registrar Nuevo Paciente
-                    </a>
-                </div>
-            @endif
-        @else
-            <div class="col-xs-12">                
-                <div class="alert alert-info">                    
-                    <i class="ace-icon fa fa-hand-o-right"></i>
-                    Los resultados de tu busqueda <b>'{{$search}}'</b> son:
-                    <a href="{{route('consulta')}}" class="ver-curriculum btn btn-primary btn-xs tooltipC pull-right" title="volver">
-                        <i class="fa fa-fw fa-reply-all"></i>																			
-                    </a>	
-                </div>
-            </div>
-                <span class="blue center"><h3>Resultados </h3></span>
-                <div class="box-body">
-                    <table id="tabla" class="table  table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th style="text-align: center; width: 10%">Expediente</th>
-                                <th style="text-align: center; width: 50%">Nombres y Apellidos</th>
-                                <th style="text-align: center; width: 10%">N° de Carnet</th>
-                                <th style="text-align: center; width: 10%">Edad</th>
-                                <th style="text-align: center; width: 10%">Opción</th>                           
-                            </tr>
-                        </thead>               
-                            <tbody>
-                                @foreach ($datos as $paciente)
-                                    <tr>
-                                        <td style="text-align: center;">{{$num=MyHelper::num_expediente($paciente->id)}}</td>
-                                        <td style="text-align: center;">{{$paciente->nombre}} {{$paciente->apellido_p}} {{$paciente->apellido_m}}</td>
-                                        <td style="text-align: center;">{{$paciente->ci}}</td>
-                                        <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($paciente->fecha_nac,"index")}}</td>
-                                        <td style="text-align: center;">
-                                            <div class="hidden-sm hidden-xs btn-group"> 
-                                                @if(Auth::user()->rol->añadir == 1)      
-                                                    <button  class="btn btn-xs btn-danger" onclick="location.href='{{route('registrar_ficha', ['id' => $paciente->id])}}'" title="Registrar Ficha">
-                                                        <i class="fa fa-book bigger-120"></i>
-                                                    </button> 
-                                                @endif 
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                    </table>
-                </div>
-            @endif
-                
-                     
-        @else
+
             <div class="box-body">
                 @php
                     setlocale(LC_ALL,"es_CO.utf8");
@@ -176,10 +82,11 @@
                 <table id="tabla" class="table  table-bordered table-hover">
                     <thead>
                         <tr>
+                            <th style="text-align: center; width: 10%">hora</th> 
                             <th style="text-align: center; width: 12%">Expediente</th>
                             <th style="text-align: center; width: 36%">Nombres y Apellidos</th>
                             <th style="text-align: center; width: 17%">Edad</th>
-                            <th style="text-align: center; width: 10%">hora</th>  
+                             
                             <th style="text-align: center; width: 10%">Estado</th>
                             <th style="text-align: center; width: 15%">Opción</th>
                         </tr>
@@ -187,9 +94,6 @@
                     <tbody>
                         @foreach ($fichas as $ficha)
                             <tr>
-                                <td style="text-align: center;">{{$num=MyHelper::num_expediente($ficha->paciente->id)}}</td>
-                                <td style="text-align: center;">{{$ficha->paciente->nombre}} {{$ficha->paciente->apellido_p}} {{$ficha->paciente->apellido_m}}</td>
-                                <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($ficha->paciente->fecha_nac,"index")}}</td>
                                 <td style="text-align: center;">
                                     @php
                                         $aux =strtotime($ficha->hora);
@@ -197,6 +101,10 @@
                                     @endphp
                                     {{$hora}}
                                 </td>
+                                <td style="text-align: center;">{{$num=MyHelper::num_expediente($ficha->paciente->id)}}</td>
+                                <td style="text-align: center;">{{$ficha->paciente->nombre}} {{$ficha->paciente->apellido_p}} {{$ficha->paciente->apellido_m}}</td>
+                                <td style="text-align: center;">{{$edad=MyHelper::Edad_Paciente($ficha->paciente->fecha_nac,"index")}}</td>
+                                
                                 <td style="text-align: center;">
                                     @if($ficha->estado==0)
                                         <span class="label label-lg label-danger arrowed-in arrowed-in-right">En Espera</span>               
@@ -209,37 +117,6 @@
                                     @endif
                                 </td>
                                 <td style="text-align: center;">
-                                    @if(Auth::user()->rol->editar == 1)
-                                        @if($ficha->estado==0)
-                                            <div class="hidden-sm hidden-xs btn-group">
-                                                <button class="btn btn-xs btn-warning" onclick="location.href='{{route('editar_ficha', ['id' => $ficha->id])}}'" title="Editar ficha" >
-                                                    <i class="fa fa-wrench bigger-120"></i>
-                                                </button>                                    
-                                                
-                                            </div>
-                                        @endif
-                                    @endif
-                                    @if(Auth::user()->rol->eliminar == 1) 
-                                        @if($ficha->estado==0)
-                                            <div class="hidden-sm hidden-xs btn-group">  
-                                                <form action="{{route('eliminar_ficha', ['id' => $ficha->id])}}" class="d-inline form-eliminar " method="POST" id="form-eliminar">
-                                                    @csrf @method("delete")
-                                                    <button type="submit" class="btn btn-danger btn-xs eliminar tooltipsC" title="Eliminar Ficha">
-                                                        <i class="fa fa-fw fa-close"></i>
-                                                    </button>
-                                                </form>
-                                            </div>                       
-                                        @endif
-                                    @endif
-                                    @if($ficha->estado==0)
-                                        <div class="hidden-sm hidden-xs btn-group">  
-                                            <form action="{{route('imprimir_ficha', ['id' => $ficha->id])}}" class="d-inline" target="{{$ficha->id}}">
-                                                <button type="submit" class="btn btn-success btn-xs eliminar tooltipsC" title="Imprimir Ficha">
-                                                    <i class="fa fa-fw fa-download"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    @endif
                                     @if($ficha->estado==0)
                                         <div class="hidden-sm hidden-xs btn-group">  
                                             <form action="{{route('crear_consulta', ['id' => $ficha->id])}}" class="d-inline">
@@ -265,7 +142,6 @@
                     </tbody>
                 </table>
             </div>   
-        @endif
     </div>
 </div>
 

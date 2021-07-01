@@ -100,11 +100,12 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
     Route::put('servicio/{id}', 'ServicioController@update') ->name('actualizar_servicio');
     Route::delete('servicio/{id}', 'ServicioController@destroy')->name('eliminar_servicio')->middleware('permisoeliminar');
         //Rutas de Ficha
+    Route::get('fichaje', 'FichaController@index_fichaje') ->name('fichaje');
     Route::get('ficha', 'FichaController@index') ->name('ficha');
     Route::get('ficha/{id}/crear', 'FichaController@create') ->name('crear_ficha')->middleware('permisocrear');
     Route::get('ficha/{id}/registrar', 'FichaController@registrar') ->name('registrar_ficha')->middleware('permisocrear');
     Route::post('ficha', 'FichaController@store') ->name('guardar_ficha');
-    Route::get('ficha/{id}/editar', 'FichaController@edit') ->name('editar_ficha')->middleware('permisoeditar');
+    Route::get('fichaje/{id}/editar', 'FichaController@edit') ->name('editar_ficha')->middleware('permisoeditar');
     Route::put('ficha/{id}', 'FichaController@update') ->name('actualizar_ficha');
     Route::delete('ficha/{id}/eliminar', 'FichaController@destroy')->name('eliminar_ficha')->middleware('permisoeliminar');
     Route::get('ficha/{id}/imprimir', 'FichaController@imprimir') ->name('imprimir_ficha');
@@ -136,7 +137,7 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
 
         //rutas de enfermeria
     Route::get('enfermeria', 'EnfermeriaController@index') ->name('enfermeria');
-    Route::get('enfermeria/crear', 'EnfermeriaController@create') ->name('crear_enfermeria')->middleware('permisocrear');
+    Route::get('enfermeria/{id}/crear', 'EnfermeriaController@create') ->name('crear_enfermeria')->middleware('permisocrear');
     Route::get('enfermeria/{id}/editar', 'EnfermeriaController@edit') ->name('editar_enfermeria')->middleware('permisoeditar');
     Route::post('enfermeria', 'EnfermeriaController@store') ->name('guardar_enfermeria');
     Route::put('enfermeria/{id}', 'EnfermeriaController@update') ->name('actualizar_enfermeria');

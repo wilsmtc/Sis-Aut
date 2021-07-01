@@ -198,12 +198,13 @@
                     <table id="tabla" class="table  table-bordered table-hover">
                         <thead>
                             <tr style="background: rgb(239, 245, 209)">
-                                <th  style="text-align: center; width:10%"> <u>Fecha</u></th>
-                                <th  style="text-align: center; width:32%"> <u>Motivo</u></th>
-                                <th  style="text-align: center; width:32%"> <u>Diagnóstico</u></th>
+                                <th  style="text-align: center; width:9%"> <u>Fecha</u></th>
+                                <th  style="text-align: center; width:28%"> <u>Motivo</u></th>
+                                <th  style="text-align: center; width:28%"> <u>Diagnóstico</u></th>
                                 <th  style="text-align: center; width:9%"> <u>Receta</u></th>
-                                <th  style="text-align: center; width:8%"> <u>E.G.</u></th>
-                                <th  style="text-align: center; width:9%"> <u>Opción</u></th>
+                                <th  style="text-align: center; width:7%"> <u>E.G.</u></th>
+                                <th  style="text-align: center; width:11%"> <u>internado</u></th>
+                                <th  style="text-align: center; width:8%"> <u>Opción</u></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -227,6 +228,13 @@
                                 </td>
                                 <td style="text-align: center;">
                                     @if($consulta["gabinete_id"]!="no")
+                                        <span class="badge badge-success"><i class="ace-icon glyphicon glyphicon-ok"></i></span>
+                                    @else
+                                        <span class="badge badge-danger"><i class="ace-icon glyphicon glyphicon-remove"></i></span>
+                                    @endif
+                                </td>
+                                <td style="text-align: center;">
+                                    @if($consulta["internacion_id"]!="no")
                                         <span class="badge badge-success"><i class="ace-icon glyphicon glyphicon-ok"></i></span>
                                     @else
                                         <span class="badge badge-danger"><i class="ace-icon glyphicon glyphicon-remove"></i></span>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Enfermeria;
+use App\Models\Admin\Paciente;
 use Illuminate\Http\Request;
 
 class EnfermeriaController extends Controller
@@ -11,20 +12,44 @@ class EnfermeriaController extends Controller
 
     public function index(Request $request)
     {
-        if($request->ver_fecha==null){
-            $fecha_actual = new \DateTime();
-            $fecha_actual=$fecha_actual->format('Y-m-d');          
+        // if($request->ver_fecha==null){
+        //     $fecha_actual = new \DateTime();
+        //     $fecha_actual=$fecha_actual->format('Y-m-d');          
+        // }
+        // else{
+        //     $fecha_actual=$request->ver_fecha;
+        // }
+        // $datos = Enfermeria::where('fecha',$fecha_actual)->orderBy('id')->get();
+        // return view('admin.enfermeria.index',compact('datos','fecha_actual'));
+        if($request->search!=null){
+            $seleccion=$request->seleccion;          
+            $query= trim($request->get('search'));
+            $search=$query;         
+            $datos_pac=Paciente::where([
+                ['estado',1],
+                [$seleccion, 'LIKE', '%'. $query . '%'],
+            ])->get();
+            return view('admin.enfermeria.index', compact('search','datos_pac')); 
         }
         else{
-            $fecha_actual=$request->ver_fecha;
+            $search=null;
+            $datos_pac=null;
+            if($request->ver_fecha==null){
+                $fecha_actual = new \DateTime();
+                $fecha_actual=$fecha_actual->format('Y-m-d');
+            }
+            else{
+                $fecha_actual=$request->ver_fecha;               
+            }
+            $datos_enf = Enfermeria::where('fecha',$fecha_actual)->orderBy('id')->get();
+            return view('admin.enfermeria.index',compact('datos_enf','fecha_actual','search','datos_pac'));         
         }
-        $datos = Enfermeria::where('fecha',$fecha_actual)->orderBy('id')->get();
-        return view('admin.enfermeria.index',compact('datos','fecha_actual'));
     }
 
-    public function create()
+    public function create($id)
     {
-        return view('admin.enfermeria.crear');
+        $paciente=Paciente::findOrFail($id);
+        return view('admin.enfermeria.crear', compact('paciente'));
     }
 
     public function store(Request $request)
@@ -52,9 +77,10 @@ class EnfermeriaController extends Controller
     }
 
     public function edit($id)
-    {
+    {   
         $data=Enfermeria::findOrFail($id);
-        return view('admin.enfermeria.editar', compact('data'));
+        $paciente=Paciente::findOrFail($data->paciente_id);
+        return view('admin.enfermeria.editar', compact('data','paciente'));
     }
 
     public function update(Request $request, $id)
