@@ -80,7 +80,7 @@ class calendarioController extends Controller
         return response()->json($data["eventos"]);
     }
 
-    public function verificar(Request $request)
+    public function verificar(Request $request) //verifica q no se creen mas de un evento en un dia del calendario
     {
         if ($request->ajax()) {
             $horarios=Calendario_consulta::where('fecha',request()->fecha)->get();
@@ -172,5 +172,175 @@ class calendarioController extends Controller
         } else {
             abort(404);
         }
+    }
+
+    public function verificar_fecha(Request $request)  //verifica q si hay fichas en esa fecha
+    {
+        if ($request->ajax()) {
+            if (Auth::user()->rol->editar == 1) {
+                $contador=Ficha::where('fecha',request()->fecha)->count();
+                if ($contador>0) {
+                    return response()->json(['mensaje' =>'tiene']);
+                } else {
+                    return response()->json(['mensaje' =>'no_tiene']);
+                }
+            } 
+            else {
+                return response()->json(['mensaje' =>'sin permiso']);
+            }
+        } else {
+            abort(404);
+        }
+    }
+
+    public function actualizar_hora(Request $request)
+    {
+        if ($request->ajax()) {
+            if (Auth::user()->rol->editar == 1) {
+                $id=request()->id;
+                $evento=Calendario_consulta::findOrFail($id);
+                $inicio=new DateTime($evento->start);
+                $fin_antiguo=new DateTime($evento->end);
+                $fin=new DateTime(request()->fin);
+                if($fin<$fin_antiguo){
+                    return response()->json(['mensaje' =>'no']);
+                }
+                else{             
+                    $diferencia_total=$inicio->diff($fin);
+                    $intervalo=$evento->intervalo;
+                    $num_consultas=(($diferencia_total->format('%H')*60)+$diferencia_total->format('%i'))/$intervalo;    
+                    $horario_cadena=$evento->horario;
+                    $horario_array=json_decode($horario_cadena);
+                    $vector=array();
+                    $z=0;
+                    foreach($horario_array as $h_a){
+                        $vector[$z]["orden"]=$h_a->orden;
+                        $vector[$z]["hora"]=$h_a->hora;
+                        $vector[$z]["estado"]=$h_a->estado;
+                        $z++;
+                    }
+                    $horario=array();
+                    $aux1=$inicio;
+                    for($i=0;$i<$num_consultas;$i++){
+                        $horario[$i]["orden"]=$i+1;
+                        $x=$aux1->format('H:i');
+                        $aux2=$aux1->modify("+ $intervalo minute");
+                        $horario[$i]["hora"]=$x;
+                        $aux1=$aux2;
+                        if($i<$evento->num_consultas){
+                            $horario[$i]["estado"]=$vector[$i]["estado"];
+                        }
+                        else{
+                            
+                            $horario[$i]["estado"]='libre';
+                        }
+                    }
+                    $horario=json_encode($horario);
+                    $evento->update([
+                        'horario' => $horario,
+                        'end' => $fin,
+                        'num_consultas' => $num_consultas
+                    ]);
+                    return response()->json(['mensaje' =>'ok']);
+                }
+            } 
+            else {
+                return response()->json(['mensaje' =>'sin permiso']);
+            }
+        } else {
+            abort(404);
+        }
+    }
+    public function varios_guardar(Request $request)
+    {
+        $fecha_ini = new \DateTime(request()->fecha_ini);
+        $fecha_fin =  new \DateTime(request()->fecha_fin);
+        $diferencia = $fecha_fin->diff($fecha_ini);
+        $diferencia= $diferencia->days;
+        $hora_ini=new DateTime(request()->hora_ini);
+        $hora_fin=new DateTime(request()->hora_fin);
+        $hora_inicio=new DateTime(request()->hora_ini);
+        $diferencia_total=$hora_ini->diff($hora_fin);
+        $num_consultas=(($diferencia_total->format('%H')*60)+$diferencia_total->format('%i'))/request()->intervalo;
+        $intervalo=request()->intervalo;
+        $horario=array();
+        $aux1=$hora_ini;
+        for($i=0;$i<$num_consultas;$i++){
+            $horario[$i]["orden"]=$i+1;
+            $x=$aux1->format('H:i');
+            $aux2=$aux1->modify("+ $intervalo minute");
+            $horario[$i]["hora"]=$x;
+            $aux1=$aux2;
+            $horario[$i]["estado"]='libre';
+        }
+        $horario=json_encode($horario);
+        for($i=0;$i<=$diferencia;$i++){
+            $new=strtotime(request()->fecha_ini."+ $i days");
+            $new=date("Y-m-d",$new);
+            $contador=Calendario_consulta::where('fecha',$new)->count();
+            if($contador==0){
+                Calendario_consulta::create([
+                    'fecha' =>$new,
+                    'title' =>'Día Hábil',
+                    'color' =>'green',
+                    'textColor' =>'white',
+                    'start' =>$new." ".$hora_inicio->format('H:i'),
+                    'end' =>$new." ".$hora_fin->format('H:i'),
+                    'intervalo' =>$intervalo,
+                    'num_consultas' =>$num_consultas,
+                    'horario' =>$horario,
+                ]);
+            }
+        }
+        return response()->json(['mensaje' =>'ok','data'=>$diferencia]);
+    }
+
+    public function varios_editar(Request $request)
+    {
+        $fecha_ini = new \DateTime(request()->fecha_ini);
+        $fecha_fin =  new \DateTime(request()->fecha_fin);
+        $diferencia = $fecha_fin->diff($fecha_ini);
+        $diferencia= $diferencia->days;
+        $hora_ini=new DateTime(request()->hora_ini);
+        $hora_fin=new DateTime(request()->hora_fin);
+        $hora_inicio=new DateTime(request()->hora_ini);
+        $diferencia_total=$hora_ini->diff($hora_fin);
+        $num_consultas=(($diferencia_total->format('%H')*60)+$diferencia_total->format('%i'))/request()->intervalo;
+        $intervalo=request()->intervalo;
+        $horario=array();
+        $aux1=$hora_ini;
+        for($i=0;$i<$num_consultas;$i++){
+            $horario[$i]["orden"]=$i+1;
+            $x=$aux1->format('H:i');
+            $aux2=$aux1->modify("+ $intervalo minute");
+            $horario[$i]["hora"]=$x;
+            $aux1=$aux2;
+            $horario[$i]["estado"]='libre';
+        }
+        $horario=json_encode($horario);
+        for($i=0;$i<=$diferencia;$i++){
+            $new=strtotime(request()->fecha_ini."+ $i days");
+            $new=date("Y-m-d",$new);
+            $contador=Calendario_consulta::where('fecha',$new)->count();
+            if($contador!=0){
+                $vector=Calendario_consulta::where('fecha',$new)->get();
+                $id=$vector[0]['id'];
+                $contador_fichas=Ficha::where('fecha',$new)->count();
+                if($contador_fichas==0){
+                    Calendario_consulta::findOrFail($id)->update([
+                        'fecha' =>$new,
+                        'title' =>'Día Hábil',
+                        'color' =>'green',
+                        'textColor' =>'white',
+                        'start' =>$new." ".$hora_inicio->format('H:i'),
+                        'end' =>$new." ".$hora_fin->format('H:i'),
+                        'intervalo' =>$intervalo,
+                        'num_consultas' =>$num_consultas,
+                        'horario' =>$horario,
+                    ]);
+                }         
+            }
+        }
+        return response()->json(['mensaje' =>'ok','data'=>$diferencia]);
     }
 }

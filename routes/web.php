@@ -134,6 +134,10 @@ Route ::group(['prefix' => 'admin', 'namespace' => 'admin', 'middleware'=> 'auth
     Route::get('calendario/verificar', 'CalendarioController@verificar') ->name('verificar');
     Route::put('calendario/actualizar', 'CalendarioController@update') ->name('actualizar_calendario');
     Route::delete('calendario/eliminar', 'CalendarioController@destroy') ->name('eliminar_calendario');
+    Route::get('calendario/verificar_fecha', 'CalendarioController@verificar_fecha') ->name('verificar_fecha');
+    Route::put('calendario/actualizar_hora', 'CalendarioController@actualizar_hora') ->name('actualizar_hora_calendario');
+    Route::post('calendario/varios_guardar', 'CalendarioController@varios_guardar') ->name('guardar_varios');
+    Route::put('calendario/varios_editar', 'CalendarioController@varios_editar') ->name('editar_varios');
 
         //rutas de enfermeria
     Route::get('enfermeria', 'EnfermeriaController@index') ->name('enfermeria');
